@@ -21,3 +21,4 @@ class Timer:
 			self.deactivate()
 			if self.func:
 				self.func()
+				self.deactivate()

@@ -1,6 +1,4 @@
 import pygame
-
-from Code.sprites import Water
 from settings import *
 from player import Player
 from overlay import Ovelay
@@ -19,7 +17,8 @@ class Level:
         #before: self.all_sprites = pygame.sprite.Group()
         #after
         self.all_sprites = CameraGroup()
-
+        self.collision_sprites = pygame.sprite.Group()
+        self.tree_sprites = pygame.sprite.Group()
         self.setup()
         self.overlay = Ovelay(self.player)
 
@@ -32,11 +31,11 @@ class Level:
                 Generic((x * TILE_SIZE, y * TILE_SIZE), surf, self.all_sprites,LAYERS['house bottom'])
         for layer in ['HouseWalls', 'HouseFurnitureTop']:
             for x,y, surf in tmx_data.get_layer_by_name(layer).tiles():
-                Generic((x * TILE_SIZE, y * TILE_SIZE), surf, self.all_sprites,LAYERS['main'])
+                Generic((x * TILE_SIZE, y * TILE_SIZE), surf, [self.all_sprites, self.collision_sprites],LAYERS['main'])
 
         #import fence tiles
         for x, y, surf in tmx_data.get_layer_by_name('Fence').tiles():
-            Generic ((x * TILE_SIZE, y * TILE_SIZE), surf, self.all_sprites, LAYERS['main'])
+            Generic ((x * TILE_SIZE, y * TILE_SIZE), surf, [self.all_sprites, self.collision_sprites], LAYERS['main'])
 
         #import water tiles
         water_frame = import_folder('../graphics/water')
@@ -45,13 +44,26 @@ class Level:
 
         #import trees
         for object in tmx_data.get_layer_by_name('Trees'):
-            Tree((object.x, object.y), object.image, self.all_sprites, object.name)
+            Tree((object.x, object.y), object.image, [self.all_sprites, self.collision_sprites, self.tree_sprites], object.name)
 
         # import decoration
         for object in tmx_data.get_layer_by_name('Decoration'):
-            WildFlower((object.x, object.y), object.image, self.all_sprites)
+            WildFlower((object.x, object.y), object.image, [self.all_sprites, self.collision_sprites])
 
-        self.player = Player((640, 360), self.all_sprites)
+        # collision tiles:
+        # Tạo các đối tượng va chạm từ lớp 'Collision'
+        for x, y, surf in tmx_data.get_layer_by_name('Collision').tiles():
+            collision_tile = Generic((x * TILE_SIZE, y * TILE_SIZE), pygame.Surface((TILE_SIZE, TILE_SIZE)), self.collision_sprites)
+
+        # Tạo đối tượng người chơi từ lớp 'Player'
+        for obj in tmx_data.get_layer_by_name('Player'):
+            if obj.name == 'Start':
+                self.player = Player(
+                    pos = (obj.x, obj.y),
+                    group = self.all_sprites,
+                    collision_sprites = self.collision_sprites,
+                    tree_sprites = self.tree_sprites)
+
         #background loading
         Generic(
             pos = (0,0),
@@ -84,3 +96,4 @@ class CameraGroup(pygame.sprite.Group):
                     offset_rect = sprite.rect.copy()
                     offset_rect.center -= self.offset
                     self.display_surface.blit(sprite.image, offset_rect)
+
