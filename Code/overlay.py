@@ -1,7 +1,7 @@
 import pygame
 from settings import *
 
-class Ovelay:
+class Overlay:
     def __init__(self, player):
         self.display_surface = pygame.display.get_surface();
         self.player = player

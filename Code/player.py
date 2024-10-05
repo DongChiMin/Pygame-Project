@@ -1,5 +1,3 @@
-
-
 import pygame
 from settings import *
 from support import *
@@ -17,16 +15,17 @@ class Player(pygame.sprite.Sprite):
         #general setup
         self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center = pos)
-
         self.z = LAYERS["main"]
 
         #movement attributes
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
         self.speed = 200
+
         # collision
-        self.hitbox = self.rect.copy().inflate((-100, -75))
+        self.hitbox = self.rect.copy().inflate((-126, -70))
         self.collision_sprites = collision_sprites
+
         #timers
         self.timers = {
             'tool use': Timer(350, self.use_tool),
@@ -45,15 +44,30 @@ class Player(pygame.sprite.Sprite):
         self.seed_index = 0
         self.selected_seed = self.seeds[self.seed_index]
 
+        # interaction
         self.tree_sprites = tree_sprites
+
     def use_tool(self):
+        print('tool use')
         if self.selected_tool == 'hoe':
             pass
+
         if self.selected_tool == 'axe':
-           pass
+            for tree in self.tree_sprites.sprites():
+                if tree.rect.collidepoint(self.target_pos):
+                    tree.damage()
+
         if self.selected_tool == 'water':
             pass
 
+
+    def get_target_pos(self):
+
+        self.target_pos = self.rect.center + PLAYER_TOOL_OFFSET[self.status.split('_')[0]]
+
+    def use_seed(self):
+
+        pass
 
     def use_seed(self):
 
@@ -181,5 +195,6 @@ class Player(pygame.sprite.Sprite):
         self.input()
         self.get_status()
         self.update_timers()
+        self.get_target_pos()
         self.move(dt)
         self.animate(dt)
