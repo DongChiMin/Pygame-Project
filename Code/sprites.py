@@ -30,7 +30,6 @@ class Water (Generic):
 
     def update(self, dt):
         self.animate(dt)
-
 class Particle(Generic):
     def __init__(self, pos, surf, groups, z, duration = 200):
         super().__init__(pos, surf, groups, z)
@@ -43,10 +42,11 @@ class Particle(Generic):
         new_surf.set_colorkey((0, 0, 0))
         self.image = new_surf
 
-        def update(self, dt):
-            current_time = pygame.time.get_ticks()
-            if current_time - self.start_time > self.duration:
-                self.kill()
+
+    def update(self, dt):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.start_time > self.duration:
+            self.kill()
 
 class WildFlower (Generic):
     def __init__(self, pos, surf, groups):
@@ -88,6 +88,10 @@ class Tree(Generic):
         # remove an apple
         if len(self.apple_sprites.sprites()) > 0:
             random_apple = choice(self.apple_sprites.sprites())
+            Particle(pos=random_apple.rect.topleft,
+                     surf=random_apple.image,
+                     groups=self.groups()[0],
+                     z=LAYERS['fruit'])
             random_apple.kill()
 
     def shake(self):
@@ -122,6 +126,7 @@ class Tree(Generic):
             if randint(0, 10) < 2:
                 x = pos[0] + self.rect.left
                 y = pos[1] + self.rect.top
+                print(f"Creating apple at ({x}, {y})")
                 Generic(
                     pos=(x, y),
                     surf=self.apple_surf,
