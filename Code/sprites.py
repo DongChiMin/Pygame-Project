@@ -43,6 +43,14 @@ class Tree(Generic):
         # tree attributes
         self.health = 5
         self.alive = True
+        self.original_pos = pos  # Lưu vị trí ban đầu của cây
+        self.shake_offset = 0  # Biến lưu trạng thái "rung"
+        self.shake_direction = 1  # Hướng rung
+        self.shake_amplitude = 5  # Độ rung (pixel)
+
+        # Timer for shaking
+        self.shake_timer = Timer(50)  # Rung trong 50ms
+
         stump_path = f'../graphics/stumps/{"small" if name == "Small" else "large"}.png'
         self.stump_surf = pygame.image.load(stump_path).convert_alpha()
         self.invul_timer = Timer(200)
@@ -57,11 +65,28 @@ class Tree(Generic):
 
         # damaging the tree
         self.health -= 1
+        if not self.shake_timer.active:
+            self.shake_timer.activate()
 
         # remove an apple
         if len(self.apple_sprites.sprites()) > 0:
             random_apple = choice(self.apple_sprites.sprites())
             random_apple.kill()
+
+    def shake(self):
+        if self.shake_timer.active:
+            # Thay đổi vị trí cây mỗi khi rung
+            self.shake_offset += self.shake_direction * self.shake_amplitude
+            self.shake_direction *= -1  # Đổi hướng rung
+            self.rect.x = self.original_pos[0] + self.shake_offset  # Cập nhật vị trí rung
+
+            # Kiểm tra xem timer có hết thời gian chưa
+            self.shake_timer.update()
+
+            # Nếu timer đã hết, dừng rung và trả về vị trí gốc
+            if not self.shake_timer.active:
+                self.rect.x = self.original_pos[0]  # Đảm bảo vị trí đúng
+                self.shake_offset = 0
 
     def check_death(self):
         if self.health <= 0:
@@ -72,6 +97,7 @@ class Tree(Generic):
 
     def update(self, dt):
         if self.alive:
+            self.shake()
             self.check_death()
 
     def create_fruit(self):
