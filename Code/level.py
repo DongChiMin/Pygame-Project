@@ -47,8 +47,13 @@ class Level:
 
         #import trees
         for object in tmx_data.get_layer_by_name('Trees'):
-            Tree((object.x, object.y), object.image,[self.all_sprites, self.collision_sprites, self.tree_sprites],
-                 object.name)
+            Tree(
+                pos=(object.x, object.y),
+                surf=object.image,
+                groups=[self.all_sprites, self.collision_sprites, self.tree_sprites],
+                name=object.name,
+                player_add_item = self.player_add_item
+            )
 
         # import decoration
         for object in tmx_data.get_layer_by_name('Decoration'):
@@ -78,6 +83,8 @@ class Level:
             groups = self.all_sprites,
             z = LAYERS["ground"])
 
+    def player_add_item (self, item):
+        self.player.item_inventory[item] += 1
 
     def run(self, dt):
         self.display_surface.fill('black')
@@ -86,6 +93,7 @@ class Level:
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
         self.overlay.display()
+        print(self.player.item_inventory)
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):

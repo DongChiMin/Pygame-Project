@@ -54,7 +54,7 @@ class WildFlower (Generic):
 
 
 class Tree(Generic):
-    def __init__(self, pos, surf, groups, name):
+    def __init__(self, pos, surf, groups, name, player_add_item):
         super().__init__(pos, surf, groups)
 
         # tree attributes
@@ -77,6 +77,7 @@ class Tree(Generic):
         self.apple_pos = APPLE_POS[name]
         self.apple_sprites = pygame.sprite.Group()
         self.create_fruit()
+        self.player_add_item = player_add_item
 
     def damage(self):
 
@@ -92,7 +93,9 @@ class Tree(Generic):
                      surf=random_apple.image,
                      groups=self.groups()[0],
                      z=LAYERS['fruit'])
+            self.player_add_item('apple')
             random_apple.kill()
+
 
     def shake(self):
         if self.shake_timer.active:
@@ -115,6 +118,7 @@ class Tree(Generic):
             self.rect = self.image.get_rect(midbottom=self.rect.midbottom)
             self.hitbox = self.rect.copy().inflate(-10, -self.rect.height * 0.6)
             self.alive = False
+            self.player_add_item('wood')
 
     def update(self, dt):
         if self.alive:
@@ -123,7 +127,7 @@ class Tree(Generic):
 
     def create_fruit(self):
         for pos in self.apple_pos:
-            if randint(0, 10) < 2:
+            if randint(5, 10) < 10:
                 x = pos[0] + self.rect.left
                 y = pos[1] + self.rect.top
                 print(f"Creating apple at ({x}, {y})")
