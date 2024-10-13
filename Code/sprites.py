@@ -11,6 +11,12 @@ class Generic(pygame.sprite.Sprite):
         self.z = z
         self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.2, -self.rect.height * 0.75)
 
+class Interaction(Generic):
+    def __init__(self, pos, size, groups, name):
+        surf = pygame.Surface(size)
+        super().__init__(pos, surf, groups)
+        self.name = name
+
 
 class Water (Generic):
     def __init__(self, pos, frames, groups):
@@ -30,6 +36,7 @@ class Water (Generic):
 
     def update(self, dt):
         self.animate(dt)
+
 class Particle(Generic):
     def __init__(self, pos, surf, groups, z, duration = 200):
         super().__init__(pos, surf, groups, z)
@@ -51,7 +58,6 @@ class Particle(Generic):
 class WildFlower (Generic):
     def __init__(self, pos, surf, groups):
         super().__init__(pos, surf, groups)
-
 
 class Tree(Generic):
     def __init__(self, pos, surf, groups, name, player_add_item):
@@ -96,7 +102,6 @@ class Tree(Generic):
             self.player_add_item('apple')
             random_apple.kill()
 
-
     def shake(self):
         if self.shake_timer.active:
             # Thay đổi vị trí cây mỗi khi rung
@@ -126,8 +131,10 @@ class Tree(Generic):
             self.check_death()
 
     def create_fruit(self):
+        if not self.alive:
+            return
         for pos in self.apple_pos:
-            if randint(5, 10) < 10:
+            if randint(0, 10) < 8:
                 x = pos[0] + self.rect.left
                 y = pos[1] + self.rect.top
                 print(f"Creating apple at ({x}, {y})")

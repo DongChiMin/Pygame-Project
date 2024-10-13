@@ -70,3 +70,4 @@ class Overlay:
         mouse_x, mouse_y = pygame.mouse.get_pos()  # Get mouse position
         self.cursor_rect.topleft = (mouse_x, mouse_y)  # Update position
         self.display_surface.blit(self.cursor_surf, self.cursor_rect)
+

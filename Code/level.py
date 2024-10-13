@@ -1,11 +1,12 @@
 import pygame
+
 from settings import *
 from player import Player
 from overlay import Overlay
-from sprites import Generic, Water, WildFlower, Tree
+from sprites import *
 from pytmx.util_pygame import load_pygame
 from support import *
-
+from transition import Transition
 
 class Level:
     def __init__(self):
@@ -13,16 +14,15 @@ class Level:
         # get the display surface
         self.display_surface = pygame.display.get_surface()
 
-        # sprite groups
-        #before: self.all_sprites = pygame.sprite.Group()
-        #after
-
         self.all_sprites = CameraGroup()
         self.collision_sprites = pygame.sprite.Group()
         self.tree_sprites = pygame.sprite.Group()
+        self.interaction_sprites = pygame.sprite.Group()
 
         self.setup()
         self.overlay = Overlay(self.player)
+
+        self.transition = Transition(self.reset_day, self.player)
 
     def setup(self):
         tmx_data = load_pygame('../data/map.tmx')
@@ -73,7 +73,16 @@ class Level:
                     pos=(obj.x, obj.y),
                     group=self.all_sprites,
                     collision_sprites=self.collision_sprites,
-                    tree_sprites=self.tree_sprites)
+                    tree_sprites=self.tree_sprites,
+                    interaction = self.interaction_sprites
+                 )
+            if obj.name == 'Bed':
+                Interaction(
+                    pos = (obj.x, obj.y),
+                    size = (obj.width, obj.height),
+                    groups = self.interaction_sprites,
+                    name = obj.name
+                )
 
 
         #background loading
@@ -86,14 +95,26 @@ class Level:
     def player_add_item (self, item):
         self.player.item_inventory[item] += 1
 
+    def reset_day (self):
+        # apple on the tree
+        for tree in self.tree_sprites.sprites():
+            for apple in tree.apple_sprites.sprites():
+                apple.kill()
+            tree.create_fruit()
+
     def run(self, dt):
-        self.display_surface.fill('black')
+        self.display_surface.fill('white')
         #before: self.all_sprites.draw(self.display_surface)
         #after:
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
         self.overlay.display()
-        print(self.player.item_inventory)
+
+        #show inventory log
+        # print(self.player.item_inventory)
+
+        if self.player.sleep:
+            self.transition.play()
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
