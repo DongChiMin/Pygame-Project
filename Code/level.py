@@ -108,14 +108,12 @@ class Level:
 
     def run(self, dt):
         self.display_surface.fill('white')
-        #before: self.all_sprites.draw(self.display_surface)
-        #after:
         self.all_sprites.custom_draw(self.player)
         self.all_sprites.update(dt)
         self.overlay.display()
 
         #show inventory log
-        # print(self.player.item_inventory)
+        #print(self.player.item_inventory)
 
         if self.player.sleep:
             self.transition.play()

@@ -12,10 +12,9 @@ class SoilLayer:
 
         #graphic
         self.soil_surfs = import_folder_dict("../graphics/soil/")
-        # print(self.soil_surfaces)
         self.soil_surf = pygame.image.load("../graphics/soil/o.png")
         self.create_soil_grid()
-        self.creat_hit_rects()
+        self.create_hit_rects()
 
     def create_soil_grid(self):
         ground = pygame.image.load("../graphics/world/ground.png")
@@ -29,11 +28,11 @@ class SoilLayer:
         for x, y, _ in load_pygame("../data/map.tmx").get_layer_by_name("Farmable").tiles():
             self.grid[y][x].append('F')
 
-        #log farmable tiles
-        # for row in self.grid:
-        #     print(row)
+        # #log farmable tiles
+        for row in self.grid:
+            print(row)
 
-    def creat_hit_rects(self):
+    def create_hit_rects(self):
         self.hit_rects = []
         #enumarate rows
         for index_row, row in enumerate(self.grid):
@@ -60,13 +59,11 @@ class SoilLayer:
         for index_row, row in enumerate(self.grid):
             for index_col, cell in enumerate(row):
                 if 'X' in cell:
-
-
                     # 4 ô đất trên dưới -trái phải hiền với ô hiện tại
                     top = 'X' in self.grid[index_row - 1][index_col]
                     bottom = 'X' in self.grid[index_row + 1][index_col]
-                    left = 'X' in row[index_col - 1]
-                    right = 'X' in row[index_col + 1]
+                    left = 'X' in self.grid[index_row][index_col - 1]
+                    right = 'X' in self.grid[index_row][index_col + 1]
 
                     tile_type = 'o' # mặc định (ô đất có viền bo tròn 4 cạnh)
 
@@ -125,6 +122,7 @@ class SoilLayer:
                     SoilTile(
                         pos = (index_col * TILE_SIZE, index_row * TILE_SIZE),
                         surf = self.soil_surfs[tile_type],
+                        #surf=self.soil_surfs,
                         groups = [self.all_sprites, self.soil_sprites]
                     )
 
