@@ -6,8 +6,8 @@ TILE_SIZE = 64
 
 # overlay positions
 OVERLAY_POSITIONS = {
-	'tool' : (SCREEN_WIDTH/2 - 75, SCREEN_HEIGHT - 35),
-	'seed': (SCREEN_WIDTH/2 + 75, SCREEN_HEIGHT - 35),
+	'tool' : (SCREEN_WIDTH/2 - 75, SCREEN_HEIGHT - 40),
+	'seed': (SCREEN_WIDTH/2 + 75, SCREEN_HEIGHT - 40),
 	'square_tool' : (SCREEN_WIDTH/2 - 75, SCREEN_HEIGHT - 20),
 	'square_seed' : (SCREEN_WIDTH/2 + 75, SCREEN_HEIGHT -20),
 	'setting_UI' : (15, 15)

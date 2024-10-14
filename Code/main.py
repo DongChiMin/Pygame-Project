@@ -11,6 +11,7 @@ class Game:
         pygame.display.set_caption('Sprout Land demo')
         self.clock = pygame.time.Clock()
         self.level = Level()
+        self.game_state = "playing"
 
     def run(self):
         while True:
