@@ -132,10 +132,7 @@ class Player(pygame.sprite.Sprite):
 
                 # change tool
             if keys[pygame.K_q] and not self.timers['tool switch'].active:
-                self.timers['tool switch'].activate()
-                self.tool_index += 1
-                self.tool_index = self.tool_index if self.tool_index < len(self.tools) else 0
-                self.selected_tool = self.tools[self.tool_index]
+                self.change_tool()
 
                 # seed use
             if keys[pygame.K_LCTRL]:
@@ -145,10 +142,7 @@ class Player(pygame.sprite.Sprite):
 
                 # change seed
             if keys[pygame.K_e] and not self.timers['seed switch'].active:
-                self.timers['seed switch'].activate()
-                self.seed_index += 1
-                self.seed_index = self.seed_index if self.seed_index < len(self.seeds) else 0
-                self.selected_seed = self.seeds[self.seed_index]
+                self.change_seed()
 
             if keys[pygame.K_RETURN]:
                 collied_interaction_sprite = pygame.sprite.spritecollide(self, self.interaction, False)
@@ -159,6 +153,17 @@ class Player(pygame.sprite.Sprite):
                         self.status = 'left_idle'
                         self.sleep = True
 
+    def change_tool(self):
+        self.timers['tool switch'].activate()
+        self.tool_index += 1
+        self.tool_index = self.tool_index if self.tool_index < len(self.tools) else 0
+        self.selected_tool = self.tools[self.tool_index]
+
+    def change_seed(self):
+        self.timers['seed switch'].activate()
+        self.seed_index += 1
+        self.seed_index = self.seed_index if self.seed_index < len(self.seeds) else 0
+        self.selected_seed = self.seeds[self.seed_index]
 
     def get_status(self):
         # idle
