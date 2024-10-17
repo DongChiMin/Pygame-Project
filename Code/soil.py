@@ -2,6 +2,7 @@ import pygame
 from settings import *
 from pytmx.util_pygame import load_pygame
 from support import *
+from random import choice
 
 class SoilLayer:
     def __init__(self, all_sprites):
@@ -9,10 +10,13 @@ class SoilLayer:
         # sprite groups
         self.all_sprites = all_sprites
         self.soil_sprites = pygame.sprite.Group()
+        self.water_sprites = pygame.sprite.Group()
 
         #graphic
         self.soil_surfs = import_folder_dict("../graphics/soil/")
         self.soil_surf = pygame.image.load("../graphics/soil/o.png")
+        self.water_surfs = import_folder('../graphics/soil_water')
+
         self.create_soil_grid()
         self.create_hit_rects()
 
@@ -53,6 +57,40 @@ class SoilLayer:
                     print("Soil tile = farmable")
                     self.grid[y][x].append('X')
                     self.create_soil_tiles()
+                    if self.raining:
+                        self.water_all()
+
+    def water(self, target_pos):
+        for soil_sprite in self.soil_sprites.sprites():
+            if soil_sprite.rect.collidepoint(target_pos):
+                x = soil_sprite.rect.x // TILE_SIZE
+                y = soil_sprite.rect.y // TILE_SIZE
+                self.grid[y][x].append('U')
+
+                pos = soil_sprite.rect.topleft
+                surf = choice(self.water_surfs)
+                WaterTile(pos, surf, [self.all_sprites, self.water_sprites])
+
+    def water_all(self):
+        for index_row, row in enumerate(self.grid):
+            for index_col, cell in enumerate(row):
+                if 'X' in cell and 'U' not in cell:
+                    cell.append('U')
+                    x = index_col * TILE_SIZE
+                    y = index_row * TILE_SIZE
+                    WaterTile((x, y), choice(self.water_surfs), [self.all_sprites, self.water_sprites])
+
+    def remove_water(self):
+
+        # destroy all water sprites
+        for sprite in self.water_sprites.sprites():
+            sprite.kill()
+
+        # clean up the grid
+        for row in self.grid:
+            for cell in row:
+                if 'U' in cell:
+                    cell.remove('U')
 
     def create_soil_tiles(self):
         self.soil_sprites.empty()
@@ -134,3 +172,9 @@ class SoilTile (pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos)
         self.z = LAYERS['soil']
 
+class WaterTile(pygame.sprite.Sprite):
+	def __init__(self, pos, surf, groups):
+		super().__init__(groups)
+		self.image = surf
+		self.rect = self.image.get_rect(topleft = pos)
+		self.z = LAYERS['soil water']
