@@ -134,7 +134,7 @@ class Tree(Generic):
         if not self.alive:
             return
         for pos in self.apple_pos:
-            if randint(0, 10) < 8:
+            if randint(0, 10) < 2:
                 x = pos[0] + self.rect.left
                 y = pos[1] + self.rect.top
                 print(f"Creating apple at ({x}, {y})")
