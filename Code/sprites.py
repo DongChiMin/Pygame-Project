@@ -138,6 +138,7 @@ class Tree(Generic):
                 x = pos[0] + self.rect.left
                 y = pos[1] + self.rect.top
                 print(f"Creating apple at ({x}, {y})")
+                # Use the Tree instance's apple_sprites group
                 Generic(
                     pos=(x, y),
                     surf=self.apple_surf,
