@@ -10,7 +10,7 @@ class Drop(Generic):
 
         # general setup
         super().__init__(pos, surf, groups, z)
-        self.lifetime = randint(400, 500)
+        self.lifetime = randint(400, 1000)
         self.start_time = pygame.time.get_ticks()
 
         # moving
@@ -55,5 +55,6 @@ class Rain:
             z=LAYERS['rain drops'])
 
     def update(self):
-        self.create_floor()
-        self.create_drops()
+        for _ in range(20):
+            self.create_floor()
+            self.create_drops()
