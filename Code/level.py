@@ -114,13 +114,14 @@ class Level:
         self.raining = randint(0, 10) > 3
         self.soil_layer.raining = self.raining
         if self.raining:
-            self.soil_layer.water_all()
+            self.soil_layer.water_all() 
 
         # apple on the tree
         for tree in self.tree_sprites.sprites():
-            for apple in tree.apple_sprites.sprites():
-                apple.kill()
-            tree.create_fruit()
+            if isinstance(tree, Tree):
+                for apple in tree.apple_sprites.sprites():
+                    apple.kill()
+                tree.create_fruit()
 
         # hien
         self.sky.start_color = [255, 255, 255]
