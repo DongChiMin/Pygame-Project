@@ -10,7 +10,7 @@ OVERLAY_POSITIONS = {
 	'seed': (SCREEN_WIDTH/2 + 75, SCREEN_HEIGHT - 40),
 	'square_tool' : (SCREEN_WIDTH/2 - 75, SCREEN_HEIGHT - 20),
 	'square_seed' : (SCREEN_WIDTH/2 + 75, SCREEN_HEIGHT -20),
-	'backpack' : (SCREEN_WIDTH - 80, SCREEN_HEIGHT -20),
+	'backpack' : (SCREEN_WIDTH - 40, SCREEN_HEIGHT -20),
 	'setting_UI' : (15, 15)
 }
 PLAYER_TOOL_OFFSET = {

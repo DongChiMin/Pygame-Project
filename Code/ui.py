@@ -12,36 +12,63 @@ class ui:
         self.player = player  # Giả sử bạn cần truy cập vào đối tượng player
 
         self.display_surface = pygame.display.get_surface()
-        self.font = pygame.font.Font('../font/SproutLand.ttf', size=28)
-        self.backpack_button = pygame.Rect(50, 50, 150, 50)  # Vị trí và kích thước của nút "Backpack"
+        self.font = pygame.font.Font('../font/SproutLand.ttf', size=30)
+
+
+        #backpack
+        self.backpack_button_surf = pygame.image.load('../graphics/overlay/square.png').convert_alpha()  # Vị trí và kích thước của nút "Backpack"
+        self.backpack_button_hover_surf = pygame.image.load('../graphics/overlay/highlight_square.png').convert_alpha()
+        self.backpack_button_rect = self.backpack_button_surf.get_rect(bottomright = OVERLAY_POSITIONS['backpack'])
+
+        #vẽ chuột
+        self.cursor_surf = pygame.image.load('../graphics/overlay/mouse_cursor.png').convert_alpha()
+        self.cursor_rect = self.cursor_surf.get_rect()
+        pygame.mouse.set_visible(False)
+
+        #các cờ (flags)
+        self.ui_opened = False
+        self.opening_backpack = False
 
     # Hàm để vẽ UI lên màn hình
-    def draw_ui(self, screen):
-        # Vẽ nút Backpack
-        pygame.draw.rect(screen, COLOR_BASE_1, self.backpack_button)  # Vẽ nút với màu xám
-        text_surface = self.font.render('Backpack', True, COLOR_MAIN)
-        screen.blit(text_surface, (self.backpack_button.x + 20, self.backpack_button.y + 10))
+    def draw_button_backpack(self):
+        # Kiểm tra nếu chuột đang hover lên nút ba lô
+        if self.check_hover(self.backpack_button_rect):
+            self.display_surface.blit(self.backpack_button_hover_surf, self.backpack_button_rect)  # Vẽ hình ảnh hover
+        else:
+            self.display_surface.blit(self.backpack_button_surf, self.backpack_button_rect)  # Vẽ hình ảnh bình thường
+
+    def draw_ui_backpack(self):
+        ui_backpack_surf = pygame.image.load('../graphics/ui/backpack.png').convert_alpha()
+        ui_backpack_rect = ui_backpack_surf.get_rect(center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        self.display_surface.blit(ui_backpack_surf, ui_backpack_rect)
 
     # Kiểm tra nếu con trỏ chuột đang hover lên một phần tử UI
-    def check_hover(self):
+    def check_hover(self, rect):
         mouse_pos = pygame.mouse.get_pos()  # Lấy vị trí chuột
-        if self.backpack_button.collidepoint(mouse_pos):
-            return 'backpack'  # Trả về 'backpack' nếu con trỏ đang hover lên nút này
-        return None
+        if rect.collidepoint(mouse_pos):
+            return True  # Trả về true nếu con trỏ đang hover lên nút này
+        return False
 
     # Xử lý các sự kiện chuột
     def handle_event(self):
         mouses = pygame.mouse.get_pressed()
-        if mouses[0] == 1:
-            hover_item = self.check_hover()
-            if hover_item == 'backpack':
-                self.open_backpack()
+        if mouses[0] == 1 and not self.ui_opened:
+            if self.check_hover(self.backpack_button_rect):
+                self.opening_backpack = True
+                self.ui_opened = True
 
-    def open_backpack(self):
-        # Thực hiện các hành động mở backpack ở đây
-        print("Backpack opened")  # Bạn có thể thay thế bằng hành động thực tế
 
     def run(self):
-        self.draw_ui(self.display_surface)
+        self.draw_button_backpack()
         self.handle_event()
+        if self.opening_backpack:
+            self.draw_ui_backpack()
+
+
+
+        # Draw mouse cursor
+        mouse_x, mouse_y = pygame.mouse.get_pos()  # Get mouse position
+        self.cursor_rect.topleft = (mouse_x, mouse_y)  # Update position
+        self.display_surface.blit(self.cursor_surf, self.cursor_rect)
+
 

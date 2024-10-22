@@ -5,13 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0bb761f-e872-4f27-a883-78be55584c6a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Code/ui.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/level.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/menu.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/overlay.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/overlay.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/overlay/squareOnMouse.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

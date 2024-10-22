@@ -40,7 +40,7 @@ class Level:
 
         #shop
         self.Menu = Menu(self.player, self.toggle_UI)
-        self.UI_active = False
+        self.UI_menu_active = False
 
         #UI
         self.ui = ui(self.player)
@@ -127,7 +127,7 @@ class Level:
         self.player.item_inventory[item] += 1
 
     def toggle_UI(self):
-        self.UI_active = not self.UI_active
+        self.UI_menu_active = not self.UI_menu_active
 
     def reset_day (self):
         # plants hien
@@ -169,24 +169,30 @@ class Level:
 
         if self.raining:
             self.rain_overlay.display()
-            if not self.UI_active:
+            if not self.UI_menu_active and not self.ui.ui_opened:
                 self.rain.update()
 
         # updates
-        if self.UI_active:
+        if self.UI_menu_active:
             #daytime: neu UI dang bat thi khong chay thời gian nữa
             self.sky.display(dt, True)
             self.Menu.update()
-
+        elif self.ui.ui_opened:
+            self.sky.display(dt, True)
         else:
             # daytime
             self.sky.display(dt, False)
-            # neu dang hien UI thi sprites khong update nua
+            # neu khong hien UI thi sprites mới được update
             self.all_sprites.update(dt)
             self.plant_collision()
 
 
-        self.overlay.display()
+        if not self.ui.ui_opened:
+            self.overlay.display()
+        self.ui.run()
+
+
+
 
         #show inventory log
         #print(self.player.item_inventory)
@@ -194,7 +200,7 @@ class Level:
         if self.player.sleep:
             self.transition.play()
 
-        self.ui.run()
+
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):
