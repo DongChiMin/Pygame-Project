@@ -1,5 +1,6 @@
 import pygame
 
+from Code.sky import RainOverlay
 from settings import *
 from player import Player
 from overlay import Overlay
@@ -10,6 +11,7 @@ from transition import Transition
 from soil import SoilLayer
 from sky import Rain, Sky
 from random import randint
+from menu import Menu
 
 class Level:
     def __init__(self):
@@ -29,10 +31,15 @@ class Level:
         self.transition = Transition(self.reset_day, self.player)
 
         # sky
+        self.rain_overlay = RainOverlay()
         self.rain = Rain(self.all_sprites)
         self.raining = randint(0, 10) > 3
         self.soil_layer.raining = self.raining
         self.sky = Sky()
+
+        #shop
+        self.Menu = Menu(self.player, self.toggle_UI)
+        self.UI_active = False
 
     def setup(self):
         tmx_data = load_pygame('../data/map.tmx')
@@ -85,7 +92,8 @@ class Level:
                     collision_sprites=self.collision_sprites,
                     tree_sprites=self.tree_sprites,
                     interaction = self.interaction_sprites,
-                    soil_layer = self.soil_layer
+                    soil_layer = self.soil_layer,
+                    toggle_UI = self.toggle_UI
                  )
             if obj.name == 'Bed':
                 Interaction(
@@ -93,6 +101,14 @@ class Level:
                     size = (obj.width, obj.height),
                     groups = self.interaction_sprites,
                     name = obj.name
+                )
+
+            if obj.name == 'Trader':
+                Interaction(
+                    pos=(obj.x, obj.y),
+                    size=(obj.width, obj.height),
+                    groups=self.interaction_sprites,
+                    name=obj.name
                 )
 
 
@@ -105,6 +121,9 @@ class Level:
 
     def player_add_item (self, item):
         self.player.item_inventory[item] += 1
+
+    def toggle_UI(self):
+        self.UI_active = not self.UI_active
 
     def reset_day (self):
         # plants hien
@@ -126,7 +145,6 @@ class Level:
         # hien
         self.sky.start_color = [255, 255, 255]
 
-    #hien
     def plant_collision(self):
         if self.soil_layer.plant_sprites:
             for plant in self.soil_layer.plant_sprites.sprites():
@@ -136,20 +154,36 @@ class Level:
                     Particle(plant.rect.topleft, plant.image, self.all_sprites, z = LAYERS['main'])
                     self.soil_layer.grid[plant.rect.centery // TILE_SIZE][plant.rect.centerx // TILE_SIZE].remove('P')
 
-
     def run(self, dt):
+
+        #drawing logic
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
-        self.all_sprites.update(dt)
-        #hien
-        self.plant_collision()
+
+
+        #weather
+
+        if self.raining:
+            self.rain_overlay.display()
+            if not self.UI_active:
+                self.rain.update()
+
+        # updates
+        if self.UI_active:
+            #daytime: neu UI dang bat thi khong chay thời gian nữa
+            self.sky.display(dt, True)
+            self.Menu.update()
+
+        else:
+            # daytime
+            self.sky.display(dt, False)
+            # neu dang hien UI thi sprites khong update nua
+            self.all_sprites.update(dt)
+            self.plant_collision()
+
+
         self.overlay.display()
 
-        # rain
-        if self.raining:
-            self.rain.update()
-        #daytime
-        self.sky.display(dt)
         #show inventory log
         #print(self.player.item_inventory)
 

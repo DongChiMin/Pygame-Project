@@ -96,6 +96,21 @@ class Overlay:
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
 
+        # Kiểm tra nếu chuột trái được bấm khi không hover
+        if pygame.mouse.get_pressed()[0] == 1 and not self.center_tool_rect.collidepoint(mouse_x,
+        mouse_y) and not self.center_seed_rect.collidepoint(
+                mouse_x, mouse_y):
+            self.player.timers['tool use'].activate()
+            self.player.direction = pygame.math.Vector2()
+            self.player.frame_index = 0
+
+        # Kiểm tra nếu chuột phải được bấm khi không hover
+        if pygame.mouse.get_pressed()[2] == 1 and not self.center_tool_rect.collidepoint(mouse_x,
+        mouse_y) and not self.center_seed_rect.collidepoint(
+                mouse_x, mouse_y):
+            self.player.timers['seed use'].activate()
+            self.player.input_seed_use()
+
     def handle_mouse_interaction(self, rect, default_surf, highlight_surf, action):
         """Handle mouse interaction for tool and seed."""
         mouse_x, mouse_y = pygame.mouse.get_pos()

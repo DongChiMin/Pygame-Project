@@ -4,16 +4,42 @@ from support import import_folder
 from sprites import Generic
 from random import randint, choice
 #hien
+
+import pygame
+from settings import *
+
+
+class RainOverlay:
+    def __init__(self, opacity=100):
+        # Lấy màn hình hiện tại
+        self.display_surface = pygame.display.get_surface()
+        # Tạo một surface với kích thước toàn màn hình
+        self.overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        # Màu phủ, có thể là màu xám (ví dụ RGB: (100, 100, 100)) và độ trong suốt (opacity)
+        self.color = (77, 77, 77)
+        # Điều chỉnh độ trong suốt của ảnh mờ
+        self.overlay.set_alpha(opacity)
+
+    def display(self):
+        # Tô màu cho surface
+        self.overlay.fill(self.color)
+
+        # Dùng cờ BLEND_RGB_MULT để tạo hiệu ứng phủ mờ
+        self.display_surface.blit(self.overlay, (0, 0))
+
+
 class Sky:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
         self.full_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))  # Thay đổi ở đây
         self.start_color = [255, 255, 255]
         self.end_color = (38, 101, 189)
-    def display(self, dt):
-        for index, value in enumerate(self.end_color):
-            if self.start_color[index] > value:
-                self.start_color[index] -= 2*dt
+
+    def display(self, dt, OnUI):
+        if not OnUI:
+            for index, value in enumerate(self.end_color):
+                if self.start_color[index] > value:
+                    self.start_color[index] -= 2 * dt
 
         self.full_surf.fill(self.start_color)
         self.display_surface.blit(self.full_surf, (0, 0), special_flags = pygame.BLEND_RGBA_MULT)
@@ -70,5 +96,6 @@ class Rain:
             z=LAYERS['rain drops'])
 
     def update(self):
-        self.create_floor()
-        self.create_drops()
+        for _ in range(20):
+            self.create_floor()
+            self.create_drops()

@@ -5,7 +5,7 @@ from timer import Timer
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group, collision_sprites,
-                 tree_sprites, interaction, soil_layer):
+                 tree_sprites, interaction, soil_layer, toggle_UI):
         super().__init__(group)
 
         self.import_assets()
@@ -52,12 +52,18 @@ class Player(pygame.sprite.Sprite):
             'tomato': 0
         }
 
+        self.seed_inventory = {
+            'corn' : 5,
+            'tomato': 5
+        }
+        self.money = 200
+
         # interaction
         self.tree_sprites = tree_sprites
         self.interaction = interaction
         self.sleep = False
-
         self.soil_layer = soil_layer
+        self.toggle_UI = toggle_UI
 
     def use_tool(self):
         print(f"Tool use = {self.selected_tool}")
@@ -77,9 +83,9 @@ class Player(pygame.sprite.Sprite):
         self.target_pos = self.rect.center + PLAYER_TOOL_OFFSET[self.status.split('_')[0]]
 # hien
     def use_seed(self):
-        self.soil_layer.plant_seed(self.target_pos, self.selected_seed)
-
-
+        if self.seed_inventory[self.selected_seed] > 0:
+            self.soil_layer.plant_seed(self.target_pos, self.selected_seed)
+            self.seed_inventory[self.selected_seed] -= 1
 
     def import_assets(self):
         self.animations = {'up': [], 'down': [], 'left': [], 'right': [],
@@ -101,6 +107,7 @@ class Player(pygame.sprite.Sprite):
 
     def input(self):
         keys = pygame.key.get_pressed()
+        mouses = pygame.mouse.get_pressed()
 
         if not self.timers['tool use'].active and not self.sleep:
             if keys[pygame.K_w]:
@@ -123,9 +130,7 @@ class Player(pygame.sprite.Sprite):
 
                 # tool use
             if keys[pygame.K_SPACE]:
-                self.timers['tool use'].activate()
-                self.direction = pygame.math.Vector2()
-                self.frame_index = 0
+                self.input_tool_use()
 
                 # change tool
             if keys[pygame.K_q] and not self.timers['tool switch'].active:
@@ -133,22 +138,31 @@ class Player(pygame.sprite.Sprite):
 
                 # seed use
             if keys[pygame.K_LCTRL]:
-                self.timers['seed use'].activate()
-                self.direction = pygame.math.Vector2()
-                self.frame_index = 0
+                self.input_seed_use()
 
                 # change seed
             if keys[pygame.K_e] and not self.timers['seed switch'].active:
                 self.change_seed()
 
             if keys[pygame.K_RETURN]:
+                self.toggle_UI()
                 collied_interaction_sprite = pygame.sprite.spritecollide(self, self.interaction, False)
                 if collied_interaction_sprite:
                     if collied_interaction_sprite[0].name == 'Trader':
-                        pass
+                        self.toggle_UI()
                     else:
                         self.status = 'left_idle'
                         self.sleep = True
+
+    def input_tool_use(self):
+        self.timers['tool use'].activate()
+        self.direction = pygame.math.Vector2()
+        self.frame_index = 0
+
+    def input_seed_use(self):
+        self.timers['seed use'].activate()
+        self.direction = pygame.math.Vector2()
+        self.frame_index = 0
 
     def change_tool(self):
         self.timers['tool switch'].activate()
