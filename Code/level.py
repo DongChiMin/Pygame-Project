@@ -12,6 +12,7 @@ from soil import SoilLayer
 from sky import Rain, Sky
 from random import randint
 from menu import Menu
+from ui import ui
 
 class Level:
     def __init__(self):
@@ -40,6 +41,9 @@ class Level:
         #shop
         self.Menu = Menu(self.player, self.toggle_UI)
         self.UI_active = False
+
+        #UI
+        self.ui = ui(self.player)
 
     def setup(self):
         tmx_data = load_pygame('../data/map.tmx')
@@ -189,6 +193,8 @@ class Level:
 
         if self.player.sleep:
             self.transition.play()
+
+        self.ui.run()
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):

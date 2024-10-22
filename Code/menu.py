@@ -12,7 +12,7 @@ class Menu:
         self.toggle_UI = toggle_UI
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font('../font/SproutLand.ttf', size = 28)
-        self.money_font = pygame.font.Font('../font/SproutLand.ttf', size = 28)
+        self.exit_stroke = pygame.font.Font('../font/SproutLand.ttf', size = 32)
 
         #options
         self.width = 400
@@ -49,7 +49,7 @@ class Menu:
         self.main_rect = pygame.Rect(SCREEN_WIDTH / 2 - self.width / 2, self.menu_top,self.width,self.total_height)
 
     def display_money(self):
-        text_surf = self.money_font.render( f"money: {self.player.money}",False,(170,121,89))
+        text_surf = self.font.render( f"money: {self.player.money}",False,(170,121,89))
         text_rect = text_surf.get_rect(midtop = (SCREEN_WIDTH / 2, 25) )
 
         #inflate: hình chữ nhật bao quanh, 6: bo tròn
@@ -93,6 +93,10 @@ class Menu:
         bg_surf = pygame.image.load('../graphics/UI/rect_1.png').convert_alpha()
         bg_rect = bg_surf.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 - 30 ))
         self.display_surface.blit(bg_surf, bg_rect)
+
+        exit_surf = pygame.image.load("../graphics/UI/exit_menu.png").convert_alpha()
+        exit_rect = exit_surf.get_rect(topleft=(bg_rect.left + 12, bg_rect.top + 12))
+        self.display_surface.blit(exit_surf, exit_rect)
 
 
         for text_index, text_surf in enumerate(self.text_surfs):

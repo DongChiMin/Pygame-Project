@@ -1,94 +1,112 @@
 import pygame
 from settings import *
+from ui import ui
 
 class Overlay:
     def __init__(self, player):
-        self.display_surface = pygame.display.get_surface();
+        self.display_surface = pygame.display.get_surface()
         self.player = player
 
-        #{tool:surface}
+        self.ui = ui(player)
+
+        # {tool:surface}
         overlay_path = '../graphics/overlay/'
         self.tools_surf = {tool: pygame.image.load(f'{overlay_path}{tool}.png').convert_alpha() for tool in player.tools}
-        self.seeds_surf ={seed: pygame.image.load(f'{overlay_path}{seed}.png').convert_alpha() for seed in player.seeds}
+        self.seeds_surf = {seed: pygame.image.load(f'{overlay_path}{seed}.png').convert_alpha() for seed in player.seeds}
 
-        #square
+        # square
         self.default_square_surf = pygame.image.load(f'{overlay_path}square.png').convert_alpha()
         self.center_tool_surf = self.default_square_surf
         self.center_seed_surf = self.default_square_surf
+        self.center_backpack_surf = self.default_square_surf  # Ô vuông mới cho backpack
         self.highlight_square_surf = pygame.image.load(f'{overlay_path}squareOnMouse.png').convert_alpha()
 
-        #key_of_square(q,e)
-        self.corner_q_surf = pygame.image.load(
-            f'{overlay_path}q.png').convert_alpha()
-        self.corner_e_surf = pygame.image.load(
-            f'{overlay_path}e.png').convert_alpha()
+        # key_of_square(q,e,b)
+        self.corner_q_surf = pygame.image.load(f'{overlay_path}q.png').convert_alpha()
+        self.corner_e_surf = pygame.image.load(f'{overlay_path}e.png').convert_alpha()
+        self.corner_b_surf = pygame.image.load(f'{overlay_path}b.png').convert_alpha()  # Thêm ô vuông cho B
 
-        #setting_UI
+        # setting_UI
         self.setting_UI_surf = pygame.image.load(f'{overlay_path}setting_ui.png').convert_alpha()
 
-        #Mouse_Cursor
+        # Mouse_Cursor
         self.cursor_surf = pygame.image.load(f'{overlay_path}mouse_cursor.png').convert_alpha()
         self.cursor_rect = self.cursor_surf.get_rect()
         pygame.mouse.set_visible(False)
 
-        #kiem tra trạng thái
+        # kiểm tra trạng thái
         self.clicked = False
         self.Q_pressed = False
         self.E_pressed = False
+        self.B_pressed = False  # Thêm biến để kiểm tra phím B
+        self.backpack_opened = False
 
-    def display (self):
-        #tools
+        # Định nghĩa vị trí cho ô vuông backpack
+        self.center_backpack_rect = self.default_square_surf.get_rect(midbottom=OVERLAY_POSITIONS['backpack'])  # Thay 'backpack' bằng khóa tương ứng trong OVERLAY_POSITIONS
+
+        # Lưu trữ vị trí gốc của ô vuông backpack
+        self.original_backpack_pos = self.center_backpack_rect.topleft
+
+    def display(self):
+        # tools
         tool_surf = self.tools_surf[self.player.selected_tool]
-        tool_rect = tool_surf.get_rect(midbottom = OVERLAY_POSITIONS['tool'])
+        tool_rect = tool_surf.get_rect(midbottom=OVERLAY_POSITIONS['tool'])
 
-        #seeds
+        # seeds
         seed_surf = self.seeds_surf[self.player.selected_seed]
         seed_rect = seed_surf.get_rect(midbottom=OVERLAY_POSITIONS['seed'])
 
-        #square_tool
+        # square_tool
         self.center_tool_rect = self.center_tool_surf.get_rect(midbottom=OVERLAY_POSITIONS['square_tool'])
 
-        #square_seed
+        # square_seed
         self.center_seed_rect = self.center_seed_surf.get_rect(midbottom=OVERLAY_POSITIONS['square_seed'])
 
-        #Quản lý hiệu ứng button
-        #Tương tác bàn phím (tool + seed)
+        # Tương tác bàn phím (tool + seed)
         self.handle_keyboard_interaction()
-        #Tương tác chuột (tool)
+
+        # Tương tác chuột (tool)
         self.center_tool_surf = self.handle_mouse_interaction(
             self.center_tool_rect, self.default_square_surf, self.highlight_square_surf, self.player.change_tool
         )
-
 
         # Tương tác chuột (seed)
         self.center_seed_surf = self.handle_mouse_interaction(
             self.center_seed_rect, self.default_square_surf, self.highlight_square_surf, self.player.change_seed
         )
 
+        # Tương tác chuột (ô vuông backpack)
+        self.center_backpack_surf = self.handle_mouse_interaction(
+            self.center_backpack_rect, self.default_square_surf, self.highlight_square_surf, self.ui.open_backpack
+        )
 
-        #key_of_square_tool
+        # key_of_square_tool
         corner_q_rect = self.corner_q_surf.get_rect(topright=(
-        self.center_tool_rect.right + 10, self.center_tool_rect.top - 10))
+            self.center_tool_rect.right + 10, self.center_tool_rect.top - 10))
         corner_e_rect = self.corner_e_surf.get_rect(topright=(
             self.center_seed_rect.right + 10, self.center_seed_rect.top - 10))
+        corner_b_rect = self.corner_b_surf.get_rect(topright=(
+            self.center_backpack_rect.right + 10, self.center_backpack_rect.top - 10))  # Vị trí cho ô vuông B
 
-        #setting_UI
-        setting_UI_rect = self.setting_UI_surf.get_rect(topleft= OVERLAY_POSITIONS['setting_UI'])
+        # setting_UI
+        setting_UI_rect = self.setting_UI_surf.get_rect(topleft=OVERLAY_POSITIONS['setting_UI'])
         self.display_surface.blit(self.setting_UI_surf, setting_UI_rect)
 
-        #Draw square
+        # Draw square
         self.display_surface.blit(self.center_tool_surf, self.center_tool_rect)
         self.display_surface.blit(self.center_seed_surf, self.center_seed_rect)
+        self.display_surface.blit(self.center_backpack_surf, self.center_backpack_rect)  # Vẽ ô vuông backpack
 
-        #Draw tool and seed
+        # Draw tool and seed
         self.display_surface.blit(seed_surf, seed_rect)
         self.display_surface.blit(tool_surf, tool_rect)
 
-        #Draw key of square
+        # Draw key of square
         self.display_surface.blit(self.corner_q_surf, corner_q_rect)
         self.display_surface.blit(self.corner_e_surf, corner_e_rect)
+        self.display_surface.blit(self.corner_b_surf, corner_b_rect)  # Vẽ ô vuông B
 
-        #Draw mouse cursor
+        # Draw mouse cursor
         mouse_x, mouse_y = pygame.mouse.get_pos()  # Get mouse position
         self.cursor_rect.topleft = (mouse_x, mouse_y)  # Update position
         self.display_surface.blit(self.cursor_surf, self.cursor_rect)
@@ -98,16 +116,16 @@ class Overlay:
 
         # Kiểm tra nếu chuột trái được bấm khi không hover
         if pygame.mouse.get_pressed()[0] == 1 and not self.center_tool_rect.collidepoint(mouse_x,
-        mouse_y) and not self.center_seed_rect.collidepoint(
-                mouse_x, mouse_y):
+                                                                                          mouse_y) and not self.center_seed_rect.collidepoint(
+                mouse_x, mouse_y) and not self.center_backpack_rect.collidepoint(mouse_x, mouse_y):  # Kiểm tra ô vuông backpack
             self.player.timers['tool use'].activate()
             self.player.direction = pygame.math.Vector2()
             self.player.frame_index = 0
 
         # Kiểm tra nếu chuột phải được bấm khi không hover
         if pygame.mouse.get_pressed()[2] == 1 and not self.center_tool_rect.collidepoint(mouse_x,
-        mouse_y) and not self.center_seed_rect.collidepoint(
-                mouse_x, mouse_y):
+                                                                                          mouse_y) and not self.center_seed_rect.collidepoint(
+                mouse_x, mouse_y) and not self.center_backpack_rect.collidepoint(mouse_x, mouse_y):  # Kiểm tra ô vuông backpack
             self.player.timers['seed use'].activate()
             self.player.input_seed_use()
 
@@ -123,7 +141,7 @@ class Overlay:
                 rect.x -= 5
                 self.clicked = True
                 action()  # Perform the action (change tool or seed)
-        elif not self.Q_pressed or not self.E_pressed:
+        elif not self.Q_pressed or not self.E_pressed or not self.B_pressed:
             # Return to default surface when not hovering
             surf = default_surf
         else:
@@ -137,7 +155,6 @@ class Overlay:
         # Khi nhấn Q
         if keys[pygame.K_q] and not self.Q_pressed:
             self.E_pressed = True
-            # Chuyển đổi tool và thay đổi hiệu ứng hình ảnh
             self.center_tool_surf = self.highlight_square_surf
             self.center_tool_rect.y += 10  # Hiệu ứng di chuyển khi nhấn
             self.center_tool_rect.x -= 5
@@ -145,11 +162,29 @@ class Overlay:
         # Khi nhấn E
         if keys[pygame.K_e] and not self.E_pressed:
             self.Q_pressed = True
-            # Chuyển đổi seed và thay đổi hiệu ứng hình ảnh
             self.center_seed_surf = self.highlight_square_surf
             self.center_seed_rect.y += 10  # Hiệu ứng di chuyển khi nhấn
             self.center_seed_rect.x -= 5
 
-        if pygame.KEYUP:
+        if keys[pygame.K_b] and not self.B_pressed:
+            self.B_pressed = True
+            self.center_backpack_surf = self.highlight_square_surf
+            self.center_backpack_rect.y += 10  # Hiệu ứng di chuyển khi nhấn
+            self.center_backpack_rect.x -= 5
+
+            # Gọi hành động mở backpack từ UI
+            if not self.backpack_opened:  # Kiểm tra nếu backpack chưa được mở
+                self.ui.open_backpack()  # Gọi hàm open_backpack từ UI
+                self.backpack_opened = True  # Đánh dấu là đã mở backpack
+
+            # Khi thả phím
+        if not keys[pygame.K_b]:
+            self.B_pressed = False
+            self.backpack_opened = False
+            self.center_backpack_rect.topleft = self.original_backpack_pos
+
+        if not keys[pygame.K_q]:
             self.Q_pressed = False
+
+        if not keys[pygame.K_e]:
             self.E_pressed = False

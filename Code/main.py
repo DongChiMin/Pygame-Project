@@ -19,6 +19,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+
             
             #dt: DeltaTime
             dt = self.clock.tick(165) / 1000
