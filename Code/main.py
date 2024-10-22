@@ -11,16 +11,17 @@ class Game:
         pygame.display.set_caption('Sprout Land demo')
         self.clock = pygame.time.Clock()
         self.level = Level()
+        self.game_state = "playing"
 
     def run(self):
-        while(True):
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
             
             #dt: DeltaTime
-            dt = self.clock.tick() / 1000
+            dt = self.clock.tick(165) / 1000
             self.level.run(dt)
             pygame.display.update()
 
