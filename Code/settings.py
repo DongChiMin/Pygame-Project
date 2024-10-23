@@ -13,7 +13,8 @@ OVERLAY_POSITIONS = {
 	'backpack' : (SCREEN_WIDTH - 40, SCREEN_HEIGHT -20),
 	'setting_UI' : (15, 15),
 	'weather' : (SCREEN_WIDTH - 10, 10),
-	'weather icon': (SCREEN_WIDTH -33, 30)
+	'weather icon': (SCREEN_WIDTH -33, 30),
+	'coin info': (SCREEN_WIDTH - 20, 125)
 }
 PLAYER_TOOL_OFFSET = {
 	'left': Vector2(-50,40),

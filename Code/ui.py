@@ -29,10 +29,17 @@ class ui:
         self.weather_ui_surf = pygame.image.load('../graphics/ui/weather.png').convert_alpha()
         self.weather_ui_rect = self.weather_ui_surf.get_rect(topright = OVERLAY_POSITIONS['weather'])
 
+        #coin info ui
+        self.coin_info_surf = pygame.image.load('../graphics/ui/coin_info.png').convert_alpha()
+        self.coin_info_rect = self.coin_info_surf.get_rect(topright = OVERLAY_POSITIONS['coin info'])
+
         #backpack
         self.backpack_button_surf = pygame.image.load('../graphics/overlay/square.png').convert_alpha()  # Vị trí và kích thước của nút "Backpack"
         self.backpack_button_hover_surf = pygame.image.load('../graphics/overlay/highlight_square.png').convert_alpha()
         self.backpack_button_rect = self.backpack_button_surf.get_rect(bottomright = OVERLAY_POSITIONS['backpack'])
+
+        self.backpack_icon_surf = pygame.image.load('../graphics/overlay/backpack.png').convert_alpha()
+        self.backpack_icon_rect = self.backpack_icon_surf.get_rect(bottomright = OVERLAY_POSITIONS['backpack'])
 
         #vẽ chuột
         self.cursor_surf = pygame.image.load('../graphics/overlay/mouse_cursor.png').convert_alpha()
@@ -71,6 +78,9 @@ class ui:
         else:
             self.display_surface.blit(self.backpack_button_surf, self.backpack_button_rect)  # Vẽ hình ảnh bình thường
 
+        #vẽ backpack icon
+        self.display_surface.blit(self.backpack_icon_surf, self.backpack_icon_rect)
+
         #vẽ Icon weather
         if self.level.raining:
             self.display_surface.blit(self.rainy_icon_surf, self.weather_icon_rect)
@@ -79,6 +89,9 @@ class ui:
 
         #Vẽ UI weather
         self.display_surface.blit(self.weather_ui_surf, self.weather_ui_rect)
+
+        #vẽ coin info
+        self.display_surface.blit(self.coin_info_surf, self.coin_info_rect)
 
 
 

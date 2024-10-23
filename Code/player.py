@@ -144,7 +144,7 @@ class Player(pygame.sprite.Sprite):
             if keys[pygame.K_e] and not self.timers['seed switch'].active:
                 self.change_seed()
 
-            if keys[pygame.K_RETURN]:
+            if keys[pygame.K_f]:
                 self.toggle_UI()
                 collied_interaction_sprite = pygame.sprite.spritecollide(self, self.interaction, False)
                 if collied_interaction_sprite:
