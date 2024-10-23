@@ -7,12 +7,9 @@
     <list default="true" id="c0bb761f-e872-4f27-a883-78be55584c6a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/overlay.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/overlay.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/UI/backpack.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/UI/backpack.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/overlay/highlight_square.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/overlay/highlight_square.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/overlay/square.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/overlay/square.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/UI/weather.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/UI/weather.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

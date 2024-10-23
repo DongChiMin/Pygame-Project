@@ -43,7 +43,7 @@ class Level:
         self.UI_menu_active = False
 
         #UI
-        self.ui = ui(self.player, self.overlay)
+        self.ui = ui(self.player, self.overlay, self)
 
     def setup(self):
         tmx_data = load_pygame('../data/map.tmx')

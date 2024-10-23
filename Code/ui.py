@@ -11,12 +11,19 @@ COLOR_MAIN = (170, 121, 89)
 
 
 class ui:
-    def __init__(self, player, overlay):
+    def __init__(self, player, overlay, level):
         self.player = player  # Giả sử bạn cần truy cập vào đối tượng player
         self.overlay = overlay
 
+        self.level = level
+
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font('../font/SproutLand.ttf', size=30)
+
+        #weather icon
+        self.sunny_icon_surf = pygame.image.load('../graphics/ui/sunny.png').convert_alpha()
+        self.rainy_icon_surf = pygame.image.load('../graphics/ui/rainy.png').convert_alpha()
+        self.weather_icon_rect = self.sunny_icon_surf.get_rect(topright=OVERLAY_POSITIONS['weather icon'])
 
         #weather ui
         self.weather_ui_surf = pygame.image.load('../graphics/ui/weather.png').convert_alpha()
@@ -64,8 +71,18 @@ class ui:
         else:
             self.display_surface.blit(self.backpack_button_surf, self.backpack_button_rect)  # Vẽ hình ảnh bình thường
 
+        #vẽ Icon weather
+        if self.level.raining:
+            self.display_surface.blit(self.rainy_icon_surf, self.weather_icon_rect)
+        else:
+            self.display_surface.blit(self.sunny_icon_surf, self.weather_icon_rect)
+
         #Vẽ UI weather
         self.display_surface.blit(self.weather_ui_surf, self.weather_ui_rect)
+
+
+
+
 
 
 
