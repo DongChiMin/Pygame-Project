@@ -7,8 +7,6 @@ class Overlay:
         self.display_surface = pygame.display.get_surface()
         self.player = player
 
-        self.ui = ui(player)
-
         # {tool:surface}
         overlay_path = '../graphics/overlay/'
         self.tools_surf = {tool: pygame.image.load(f'{overlay_path}{tool}.png').convert_alpha() for tool in player.tools}
@@ -19,6 +17,12 @@ class Overlay:
         self.center_tool_surf = self.default_square_surf
         self.center_seed_surf = self.default_square_surf
         self.highlight_square_surf = pygame.image.load(f'{overlay_path}highlight_square.png').convert_alpha()
+
+        # square_tool
+        self.center_tool_rect = self.center_tool_surf.get_rect(midbottom=OVERLAY_POSITIONS['square_tool'])
+
+        # square_seed
+        self.center_seed_rect = self.center_seed_surf.get_rect(midbottom=OVERLAY_POSITIONS['square_seed'])
 
         # key_of_square(q,e,b)
         self.corner_q_surf = pygame.image.load(f'{overlay_path}q.png').convert_alpha()
@@ -42,12 +46,6 @@ class Overlay:
         # seeds
         seed_surf = self.seeds_surf[self.player.selected_seed]
         seed_rect = seed_surf.get_rect(midbottom=OVERLAY_POSITIONS['seed'])
-
-        # square_tool
-        self.center_tool_rect = self.center_tool_surf.get_rect(midbottom=OVERLAY_POSITIONS['square_tool'])
-
-        # square_seed
-        self.center_seed_rect = self.center_seed_surf.get_rect(midbottom=OVERLAY_POSITIONS['square_seed'])
 
         # Tương tác bàn phím (tool + seed)
         self.handle_keyboard_interaction()
@@ -91,19 +89,7 @@ class Overlay:
         if pygame.mouse.get_pressed()[0] == 0:
             self.clicked = False
 
-        # Kiểm tra nếu chuột trái được bấm khi không hover
-        if pygame.mouse.get_pressed()[0] == 1 and not self.center_tool_rect.collidepoint(mouse_x,
-                                                                                          mouse_y) and not self.center_seed_rect.collidepoint(
-                mouse_x, mouse_y):
-            self.player.timers['tool use'].activate()
-            self.player.direction = pygame.math.Vector2()
-            self.player.frame_index = 0
 
-        # Kiểm tra nếu chuột phải được bấm khi không hover
-        if pygame.mouse.get_pressed()[2] == 1 and not self.center_tool_rect.collidepoint(mouse_x,
-        mouse_y) and not self.center_seed_rect.collidepoint(mouse_x, mouse_y):
-            self.player.timers['seed use'].activate()
-            self.player.input_seed_use()
 
     def handle_mouse_interaction(self, rect, default_surf, highlight_surf, action):
         """Handle mouse interaction for tool and seed."""
@@ -113,8 +99,6 @@ class Overlay:
             surf = highlight_surf
 
             if pygame.mouse.get_pressed()[0] == 1 and not self.clicked:
-                rect.y += 10
-                rect.x -= 5
                 self.clicked = True
                 action()  # Perform the action (change tool or seed)
         elif not self.Q_pressed or not self.E_pressed:
@@ -132,15 +116,11 @@ class Overlay:
         if keys[pygame.K_q] and not self.Q_pressed:
             self.E_pressed = True
             self.center_tool_surf = self.highlight_square_surf
-            self.center_tool_rect.y += 10  # Hiệu ứng di chuyển khi nhấn
-            self.center_tool_rect.x -= 5
 
         # Khi nhấn E
         if keys[pygame.K_e] and not self.E_pressed:
             self.Q_pressed = True
             self.center_seed_surf = self.highlight_square_surf
-            self.center_seed_rect.y += 10  # Hiệu ứng di chuyển khi nhấn
-            self.center_seed_rect.x -= 5
 
         if not keys[pygame.K_q]:
             self.Q_pressed = False
