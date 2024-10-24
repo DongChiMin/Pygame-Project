@@ -71,6 +71,7 @@ class Menu:
         bg_rect = pygame.Rect(self.main_rect.left + 15, top, self.width - 30, text_surf.get_height() + (self.padding * 2))
         pygame.draw.rect(self.display_surface, (232, 207, 166), bg_rect, 0, 4)
 
+
         #text
         text_rect = text_surf.get_rect(midleft = (self.main_rect.left + 30, bg_rect.centery))
         self.display_surface.blit(text_surf, text_rect)
@@ -87,7 +88,7 @@ class Menu:
     def update(self):
         self.input()
         self.display_money()
-        #enumerate: de lay ra duoc index cua item
+
 
         #in ra nền background
         bg_surf = pygame.image.load('../graphics/UI/rect_1.png').convert_alpha()
@@ -98,7 +99,7 @@ class Menu:
         exit_rect = exit_surf.get_rect(topleft=(bg_rect.left + 12, bg_rect.top + 12))
         self.display_surface.blit(exit_surf, exit_rect)
 
-
+        #enumerate: de lay ra duoc index cua item
         for text_index, text_surf in enumerate(self.text_surfs):
             top = self.main_rect.top + text_index * (text_surf.get_height() + (self.padding * 2) + self.space)
             amount_list = list(self.player.item_inventory.values()) + list(self.player.seed_inventory.values())

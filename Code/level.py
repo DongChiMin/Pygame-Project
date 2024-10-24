@@ -38,12 +38,12 @@ class Level:
         self.soil_layer.raining = self.raining
         self.sky = Sky()
 
+        #UI
+        self.ui = ui(self.player, self.overlay, self)
+
         #shop
         self.Menu = Menu(self.player, self.toggle_UI)
         self.UI_menu_active = False
-
-        #UI
-        self.ui = ui(self.player, self.overlay, self)
 
     def setup(self):
         tmx_data = load_pygame('../data/map.tmx')
@@ -125,6 +125,8 @@ class Level:
 
     def player_add_item (self, item):
         self.player.item_inventory[item] += 1
+        item_image = pygame.image.load(f'../graphics/items/{item}.png').convert_alpha()
+        self.ui.add_item_display(item_image)  # Thêm item vào danh sách hiển thị
 
     def toggle_UI(self):
         self.UI_menu_active = not self.UI_menu_active
