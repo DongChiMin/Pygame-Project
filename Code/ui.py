@@ -39,7 +39,7 @@ class ui:
 
         # Khởi tạo danh sách hiển thị item
         self.item_display = []  # Danh sách chứa các item hiển thị
-        self.display_time = 2000  # Thời gian hiển thị (ms)
+        self.display_time = 4000  # Thời gian hiển thị (ms)
         self.start_time = None  # Thời gian bắt đầu hiển thị
         self.active = False  # Trạng thái hiển thị
 

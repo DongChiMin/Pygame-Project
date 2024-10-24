@@ -5,41 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0bb761f-e872-4f27-a883-78be55584c6a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Sprout Lands - UI Pack - Basic pack/Sprite sheets/Dialouge UI/Emotes/Teemo Basic emote animations sprite sheet.png" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sprout Lands - UI Pack - Basic pack/Sprite sheets/Dialouge UI/Emotes/Teemo Basic emote animations sprite sheet.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/sky.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/sky.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/map.tmx" beforeDir="false" afterPath="$PROJECT_DIR$/data/map.tmx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/UI/backpack.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/UI/backpack.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/UI/rect_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/UI/rect_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/fruit/apple.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/fruit/apple.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/b.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/b.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/bl.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/bl.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/bm.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/bm.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/br.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/br.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/l.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/l.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/lm.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/lm.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/lr.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/lr.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/lrb.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/lrb.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/lrt.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/lrt.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/o.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/o.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/r.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/r.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/rm.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/rm.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/soil.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/soil.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/t.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/t.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/tb.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/tb.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/tbl.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/tbl.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/tbr.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/tbr.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/tl.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/tl.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/tm.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/tm.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/tr.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/tr.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil/x.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil/x.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil_water/0.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil_water/0.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil_water/1.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil_water/1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/soil_water/2.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/soil_water/2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/world/ground.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/world/ground.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
