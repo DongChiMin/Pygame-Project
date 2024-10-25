@@ -33,13 +33,20 @@ class Level:
         # sky
         self.rain_overlay = RainOverlay()
         self.rain = Rain(self.all_sprites)
-        self.raining = randint(0, 10) > 3
+        self.raining = randint(0, 10) > 7
         self.soil_layer.raining = self.raining
         self.sky = Sky()
 
         #shop
         self.Menu = Menu(self.player, self.toggle_UI)
         self.UI_active = False
+
+        #sound
+        self.background_music = pygame.mixer.Sound("../audio/music.mp3")
+        self.background_music.set_volume(0.5)
+        self.background_music.play()
+        self.success = pygame.mixer.Sound("../audio/success.wav")
+        self.success.set_volume(0.4)
 
     def setup(self):
         tmx_data = load_pygame('../data/map.tmx')
@@ -113,14 +120,17 @@ class Level:
 
 
         #background loading
+
         Generic(
             pos = (0,0),
             surf= pygame.image.load("../graphics/world/ground.png").convert_alpha(),
             groups = self.all_sprites,
             z = LAYERS["ground"])
 
+
     def player_add_item (self, item):
         self.player.item_inventory[item] += 1
+        self.success.play()
 
     def toggle_UI(self):
         self.UI_active = not self.UI_active

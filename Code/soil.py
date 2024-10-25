@@ -1,7 +1,6 @@
 
 
 import pygame
-from fontTools.ttLib.tables.E_B_L_C_ import eblc_index_sub_table_1
 
 from settings import *
 from pytmx.util_pygame import load_pygame
@@ -62,6 +61,12 @@ class SoilLayer:
         self.create_soil_grid()
         self.create_hit_rects()
 
+        self.hoe_sound = pygame.mixer.Sound("../audio/hoe.wav")
+        self.hoe_sound.set_volume(0.1)
+
+        self.plant = pygame.mixer.Sound("../audio/plant.wav")
+        self.plant.set_volume(0.2)
+
 
     def create_soil_grid(self):
         ground = pygame.image.load("../graphics/world/ground.png")
@@ -94,6 +99,7 @@ class SoilLayer:
         for rect in self.hit_rects:
             # kiểm tra tọa độ chuẩn đang nằm tại tiles bao nhiêu
             if rect.collidepoint(point):
+                self.hoe_sound.play()
                 x = rect.x // TILE_SIZE
                 y = rect.y // TILE_SIZE
                 if 'F' in self.grid[y][x]:
@@ -144,6 +150,7 @@ class SoilLayer:
     def plant_seed(self, target_pos, seed):
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(target_pos):
+                self.plant.play()
                 x = soil_sprite.rect.x // TILE_SIZE
                 y = soil_sprite.rect.y // TILE_SIZE
                 if 'P' not in self.grid[y][x]:  # Kiểm tra ô đã có cây chưa

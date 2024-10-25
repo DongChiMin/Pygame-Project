@@ -13,6 +13,7 @@ class Game:
         self.level = Level()
         self.game_state = "playing"
 
+
     def run(self):
         while True:
             for event in pygame.event.get():

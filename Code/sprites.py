@@ -70,7 +70,7 @@ class Tree(Generic):
         self.shake_offset = 0  # Biến lưu trạng thái "rung"
         self.shake_direction = 1  # Hướng rung
         self.shake_amplitude = 5  # Độ rung (pixel)
-
+        self.axe_sound = pygame.mixer.Sound("../audio/axe.mp3")
         # Timer for shaking
         self.shake_timer = Timer(50)  # Rung trong 50ms
 
@@ -92,6 +92,9 @@ class Tree(Generic):
         if not self.shake_timer.active:
             self.shake_timer.activate()
 
+        # sound
+        self.axe_sound.play()
+
         # remove an apple
         if len(self.apple_sprites.sprites()) > 0:
             random_apple = choice(self.apple_sprites.sprites())
@@ -101,6 +104,8 @@ class Tree(Generic):
                      z=LAYERS['fruit'])
             self.player_add_item('apple')
             random_apple.kill()
+
+
 
     def shake(self):
         if self.shake_timer.active:
