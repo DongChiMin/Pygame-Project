@@ -39,7 +39,7 @@ class Sky:
         if not OnUI:
             for index, value in enumerate(self.end_color):
                 if self.start_color[index] > value:
-                    self.start_color[index] -= 2 * dt
+                    self.start_color[index] -= 1 * dt
 
         self.full_surf.fill(self.start_color)
         self.display_surface.blit(self.full_surf, (0, 0), special_flags = pygame.BLEND_RGBA_MULT)

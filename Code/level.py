@@ -12,6 +12,7 @@ from soil import SoilLayer
 from sky import Rain, Sky
 from random import randint
 from menu import Menu
+from ui import ui
 
 class Level:
     def __init__(self):
@@ -37,9 +38,12 @@ class Level:
         self.soil_layer.raining = self.raining
         self.sky = Sky()
 
+        #UI
+        self.ui = ui(self.player, self.overlay, self)
+
         #shop
         self.Menu = Menu(self.player, self.toggle_UI)
-        self.UI_active = False
+        self.UI_menu_active = False
 
         #sound
         self.background_music = pygame.mixer.Sound("../audio/music.mp3")
@@ -120,20 +124,20 @@ class Level:
 
 
         #background loading
-
         Generic(
             pos = (0,0),
             surf= pygame.image.load("../graphics/world/ground.png").convert_alpha(),
             groups = self.all_sprites,
             z = LAYERS["ground"])
 
-
     def player_add_item (self, item):
         self.player.item_inventory[item] += 1
         self.success.play()
+        item_image = pygame.image.load(f'../graphics/items/{item}.png').convert_alpha()
+        self.ui.add_item_display(item_image)  # Thêm item vào danh sách hiển thị
 
     def toggle_UI(self):
-        self.UI_active = not self.UI_active
+        self.UI_menu_active = not self.UI_menu_active
 
     def reset_day (self):
         # plants hien
@@ -175,24 +179,30 @@ class Level:
 
         if self.raining:
             self.rain_overlay.display()
-            if not self.UI_active:
+            if not self.UI_menu_active and not self.ui.ui_opened:
                 self.rain.update()
 
         # updates
-        if self.UI_active:
+        if self.UI_menu_active:
             #daytime: neu UI dang bat thi khong chay thời gian nữa
             self.sky.display(dt, True)
             self.Menu.update()
-
+        elif self.ui.ui_opened:
+            self.sky.display(dt, True)
         else:
             # daytime
             self.sky.display(dt, False)
-            # neu dang hien UI thi sprites khong update nua
+            # neu khong hien UI thi sprites mới được update
             self.all_sprites.update(dt)
             self.plant_collision()
 
 
-        self.overlay.display()
+        if not self.ui.ui_opened:
+            self.overlay.display()
+        self.ui.run()
+
+
+
 
         #show inventory log
         #print(self.player.item_inventory)
