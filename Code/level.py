@@ -97,7 +97,7 @@ class Level:
                     tree_sprites=self.tree_sprites,
                     interaction = self.interaction_sprites,
                     soil_layer = self.soil_layer,
-                    toggle_UI = self.toggle_UI
+                    toggle_UI = self.toggle_UI,
                  )
             if obj.name == 'Bed':
                 Interaction(

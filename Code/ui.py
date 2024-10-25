@@ -3,7 +3,8 @@ from idna import check_hyphen_ok
 
 from settings import *
 from timer import *
-from menu import Menu
+from main import Game
+from dialogue_manager import DialogueManager
 import pygame
 
 COLOR_BASE_1 = (232, 207, 166)
@@ -21,6 +22,10 @@ class ui:
         #font chữ
         self.display_surface = pygame.display.get_surface()
         self.font = pygame.font.Font('../font/SproutLand.ttf', size=30)
+
+        #hội thoại
+        self.dialogue_manager = DialogueManager(self.display_surface)
+        self.game = Game
 
         # Thêm thuộc tính cho ngày
         self.current_day = 1  # Ngày bắt đầu
@@ -42,6 +47,7 @@ class ui:
         self.display_time = 4000  # Thời gian hiển thị (ms)
         self.start_time = None  # Thời gian bắt đầu hiển thị
         self.active = False  # Trạng thái hiển thị
+        self.item_display = []  # Danh sách quản lý hiển thị item
 
         #weather icon
         self.sunny_icon_surf = pygame.image.load('../graphics/ui/sunny.png').convert_alpha()
@@ -172,27 +178,33 @@ class ui:
             self.draw_text_with_outline(day_text, 100, 80)  # Vẽ ngày ở vị trí (100, 80)
 
     def add_item_display(self, item_image):
-        self.item_display.append(item_image)
-        if not self.active:
-            self.start_time = pygame.time.get_ticks()
-            self.active = True
+        # Mỗi item là một dictionary chứa thông tin về hình ảnh, alpha, và thời gian
+        item_info = {
+            'image': item_image,  # Thay 'image' thành 'item_image' cho đúng với tham số
+            'alpha': 255,  # Độ mờ bắt đầu từ 255 (hoàn toàn hiển thị)
+            'timer': Timer(2000),  # Thời gian hiển thị là 2 giây
+            'position': (50, SCREEN_HEIGHT - 100 - len(self.item_display) * 70),  # Tính vị trí để không chồng lên
+        }
+        self.item_display.append(item_info)
+        item_info['timer'].activate()  # Kích hoạt timer
 
     def update_item_display(self):
-        if self.active:
-            current_time = pygame.time.get_ticks()
-            if current_time - self.start_time >= self.display_time:
-                self.active = False
-                self.item_display.clear()  # Xóa danh sách khi hết thời gian
+        for item in self.item_display[:]:  # Duyệt qua từng item trong danh sách
+            if item['timer'].active:
+                item['timer'].update()  # Cập nhật thời gian
+            else:
+                item['alpha'] -= 5  # Giảm alpha dần sau khi hết thời gian hiển thị
+                if item['alpha'] <= 0:  # Nếu alpha <= 0 thì loại bỏ item
+                    self.item_display.remove(item)
 
     def draw_item_display(self):
-        if self.active and self.item_display:
-            for index, item in enumerate(self.item_display):
-                # Tính toán độ mờ dần
-                alpha = 255 - (255 * (pygame.time.get_ticks() - self.start_time) / self.display_time)
-                item.set_alpha(alpha)  # Áp dụng độ mờ
+        for item in self.item_display:
+            # Tạo bản sao của hình ảnh để chỉnh alpha
+            item_image = item['image'].copy()
+            item_image.set_alpha(item['alpha'])  # Cập nhật độ mờ (alpha)
 
-                # Vẽ item ở góc dưới bên trái
-                self.display_surface.blit(item, (50, SCREEN_HEIGHT - 100 - index * 32))  # Điều chỉnh vị trí nếu cần
+            # Vẽ hình ảnh tại vị trí cụ thể
+            self.display_surface.blit(item_image, item['position'])
 
 
     def draw_ui_backpack(self):
@@ -254,6 +266,19 @@ class ui:
         if self.exit_button_rect not in self.active_ui_rects:
             self.active_ui_rects.append(self.exit_button_rect)
 
+    #HỘI THOẠI
+    def start_dialogue(self, dialogues):
+        """Gọi hội thoại từ lớp DialogueManager"""
+        self.dialogue_manager.start_dialogue(dialogues)
+
+    def update_dialogue(self, dt):
+        """Cập nhật hội thoại"""
+        self.dialogue_manager.update(dt)
+
+    def draw_dialogue(self):
+        """Hiển thị UI"""
+        self.dialogue_manager.draw()
+
 
     # Kiểm tra nếu con trỏ chuột đang hover lên một phần tử UI
     def check_hover(self, rect):
@@ -312,6 +337,18 @@ class ui:
             self.player.timers['seed use'].activate()
             self.player.input_seed_use()
 
+
+    def player_keyboard(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_f]:
+            collied_interaction_sprite = pygame.sprite.spritecollide(self.player, self.player.interaction, False)
+            if collied_interaction_sprite:
+                if collied_interaction_sprite[0].name == 'Trader':
+                    dialogues = ["Chào bạn!", "Hãy mua những món hàng tuyệt vời của tôi!", "Chúc bạn may mắn!"]
+                    self.start_dialogue(dialogues)  # Bắt đầu hội thoại mới
+        if keys[pygame.K_RETURN] and self.dialogue_manager.in_dialogue:
+            self.dialogue_manager.advance_sentence()  # Chuyển câu thoại
+
     def remove_ui_elements(self):
         if self.exit_button_rect in self.active_ui_rects:
             self.active_ui_rects.remove(self.exit_button_rect)
@@ -320,12 +357,14 @@ class ui:
 
 
     def run(self):
+
         self.draw_UI()
         self.handle_event()
 
         self.player_click()
+        self.player_keyboard()
         self.check_mouse_collision()
-        print(self.active_ui_rects)
+        # print(self.active_ui_rects)
 
 
 
@@ -346,10 +385,14 @@ class ui:
         #delay 0.5s trước khi tắt UI backpack
         self.remove_backpack_ui.update()
 
+        #hội thoại
+        dt = pygame.time.Clock().tick(165) / 1000
+        ui.update_dialogue(dt)
+        ui.draw_dialogue()
+
+
 
         # Draw mouse cursor
         mouse_x, mouse_y = pygame.mouse.get_pos()  # Get mouse position
         self.cursor_rect.topleft = (mouse_x, mouse_y)  # Update position
         self.display_surface.blit(self.cursor_surf, self.cursor_rect)
-
-

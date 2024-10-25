@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
         self.selected_tool = self.tools[self.tool_index]
 
         # seeds
-        self.seeds = ['corn', 'tomato']
+        self.seeds = ['wheat', 'tomato']
         self.seed_index = 0
         self.selected_seed = self.seeds[self.seed_index]
 
@@ -48,12 +48,12 @@ class Player(pygame.sprite.Sprite):
         self.item_inventory = {
             'wood': 0,
             'apple': 0,
-            'corn': 0,
+            'wheat': 0,
             'tomato': 0
         }
 
         self.seed_inventory = {
-            'corn' : 5,
+            'wheat' : 5,
             'tomato': 5
         }
         self.money = 200
@@ -144,15 +144,15 @@ class Player(pygame.sprite.Sprite):
             if keys[pygame.K_e] and not self.timers['seed switch'].active:
                 self.change_seed()
 
-            if keys[pygame.K_f]:
-                self.toggle_UI()
-                collied_interaction_sprite = pygame.sprite.spritecollide(self, self.interaction, False)
-                if collied_interaction_sprite:
-                    if collied_interaction_sprite[0].name == 'Trader':
-                        self.toggle_UI()
-                    else:
-                        self.status = 'left_idle'
-                        self.sleep = True
+            # if keys[pygame.K_f]:
+            #     self.toggle_UI()
+            #     collied_interaction_sprite = pygame.sprite.spritecollide(self, self.interaction, False)
+            #     if collied_interaction_sprite:
+            #         if collied_interaction_sprite[0].name == 'Trader':
+            #             self.toggle_UI()
+            #         else:
+            #             self.status = 'left_idle'
+            #             self.sleep = True
 
     def input_tool_use(self):
         self.timers['tool use'].activate()

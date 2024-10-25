@@ -5,12 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c0bb761f-e872-4f27-a883-78be55584c6a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Code/dialogue_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/fruit/corn/0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/fruit/corn/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/fruit/corn/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/fruit/corn/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/items/apple.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/items/apple.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/items/wood.png" beforeDir="false" afterPath="$PROJECT_DIR$/graphics/items/wood.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graphics/overlay/corn.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="Python Unit Test" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
