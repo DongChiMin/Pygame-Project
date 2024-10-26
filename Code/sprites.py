@@ -1,4 +1,6 @@
 import pygame
+
+from Code import sound
 from settings import *
 from random import randint, choice
 from timer import Timer
@@ -10,6 +12,7 @@ class Generic(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos)
         self.z = z
         self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.2, -self.rect.height * 0.75)
+
 
 class Interaction(Generic):
     def __init__(self, pos, size, groups, name):
@@ -63,6 +66,9 @@ class Tree(Generic):
     def __init__(self, pos, surf, groups, name, player_add_item):
         super().__init__(pos, surf, groups)
 
+        #sound
+        self.axe_sound = pygame.mixer.Sound("../audio/axe.wav")
+
         # tree attributes
         self.health = 5
         self.alive = True
@@ -91,6 +97,9 @@ class Tree(Generic):
         self.health -= 1
         if not self.shake_timer.active:
             self.shake_timer.activate()
+
+        #play sound
+        self.axe_sound.play()
 
         # remove an apple
         if len(self.apple_sprites.sprites()) > 0:

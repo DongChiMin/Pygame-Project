@@ -101,6 +101,8 @@ class ui:
         #timer
         self.remove_backpack_ui = Timer(500, self.remove_ui_elements)
 
+
+
     # Hàm để vẽ UI lên màn hình
     def draw_UI(self):
         # Vẽ nút backpack
@@ -254,8 +256,12 @@ class ui:
     def draw_exit_button(self):
         # vẽ nút exit
         if self.check_hover(self.exit_button_rect):
+            if not self.button_sound_playing:
+                self.button_sound.play()
+                self.button_sound_playing = True
             self.display_surface.blit(self.exit_button_hover_surf, self.exit_button_rect)
         else:
+            self.button_sound_playing = False
             self.display_surface.blit(self.exit_button_surf, self.exit_button_rect)
         if self.exit_button_rect not in self.active_ui_rects:
             self.active_ui_rects.append(self.exit_button_rect)
@@ -272,6 +278,7 @@ class ui:
     def draw_dialogue(self):
         """Hiển thị UI"""
         if self.dialogue_manager.in_dialogue:
+            self.player.footstep.stop()
             # Vẽ nền hội thoại
             bg_rect = self.dialogue_bg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 150))
             self.display_surface.blit(self.dialogue_bg, bg_rect)
@@ -302,6 +309,7 @@ class ui:
     def check_hover(self, rect):
         mouse_pos = pygame.mouse.get_pos()  # Lấy vị trí chuột
         if rect.collidepoint(mouse_pos):
+
             return True  # Trả về true nếu con trỏ đang hover lên nút này
         return False
 

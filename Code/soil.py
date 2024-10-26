@@ -12,6 +12,7 @@ from random import choice
 class Plant(pygame.sprite.Sprite):
     def __init__(self, plant_type, groups, soil, check_watered):
         super().__init__(groups)
+
         self.plant_type = plant_type
         self.frames = import_folder(f'../graphics/fruit/{plant_type}')
         self.soil = soil
@@ -48,6 +49,7 @@ class Plant(pygame.sprite.Sprite):
 class SoilLayer:
     def __init__(self, all_sprites, collision_sprites):
 #hien
+
         # sprite groups
         self.all_sprites = all_sprites
         self.soil_sprites = pygame.sprite.Group()
@@ -61,6 +63,10 @@ class SoilLayer:
 
         self.create_soil_grid()
         self.create_hit_rects()
+
+        #sound
+        self.plant_sound = pygame.mixer.Sound("../audio/plant.wav")
+        self.plant_sound.set_volume(3)
 
 
     def create_soil_grid(self):
@@ -94,6 +100,8 @@ class SoilLayer:
         for rect in self.hit_rects:
             # kiểm tra tọa độ chuẩn đang nằm tại tiles bao nhiêu
             if rect.collidepoint(point):
+
+
                 x = rect.x // TILE_SIZE
                 y = rect.y // TILE_SIZE
                 if 'F' in self.grid[y][x]:
@@ -106,6 +114,7 @@ class SoilLayer:
     def water(self, target_pos):
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(target_pos):
+
                 x = soil_sprite.rect.x // TILE_SIZE
                 y = soil_sprite.rect.y // TILE_SIZE
                 self.grid[y][x].append('U')
@@ -144,6 +153,8 @@ class SoilLayer:
     def plant_seed(self, target_pos, seed):
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(target_pos):
+                self.plant_sound.play()
+
                 x = soil_sprite.rect.x // TILE_SIZE
                 y = soil_sprite.rect.y // TILE_SIZE
                 if 'P' not in self.grid[y][x]:  # Kiểm tra ô đã có cây chưa

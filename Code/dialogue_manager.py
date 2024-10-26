@@ -20,6 +20,9 @@ class DialogueManager:
         self.max_line_length = 25  # Số ký tự tối đa mỗi dòng
         self.callback = None  # Hàm callback
 
+        # sound
+        self.dialogue_sound = pygame.mixer.Sound("../audio/dialogue.wav")
+
     def start_dialogue(self, dialogues, callback=None):
         """Bắt đầu hội thoại mới với danh sách câu truyền vào"""
         self.dialogues = dialogues
@@ -62,10 +65,12 @@ class DialogueManager:
                 self.display_text += self.dialogues[self.current_sentence][self.char_index]
                 self.char_index += 1
                 self.time_since_last_char = 0
+                self.dialogue_sound.play(loops = -1)
 
             # Nếu đã hiện hết câu, cho phép nhấn Enter
             if self.char_index >= len(self.dialogues[self.current_sentence]):
                 self.can_advance = True
+                self.dialogue_sound.stop()
 
             # Chia văn bản thành các dòng khi cần thiết
             self.lines = self.split_text_to_lines(self.display_text)

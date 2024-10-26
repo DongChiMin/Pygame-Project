@@ -65,6 +65,11 @@ class Player(pygame.sprite.Sprite):
         self.soil_layer = soil_layer
         self.toggle_UI = toggle_UI
 
+        #sound
+        self.isMoving = False
+        self.watering = pygame.mixer.Sound("../audio/watering.wav")
+        self.footstep = pygame.mixer.Sound("../audio/footstep.mp3")
+
     def use_tool(self):
         print(f"Tool use = {self.selected_tool}")
         if self.selected_tool == 'hoe':
@@ -77,6 +82,7 @@ class Player(pygame.sprite.Sprite):
 
         if self.selected_tool == 'water':
             self.soil_layer.water(self.target_pos)
+            self.watering.play()
 
 
     def get_target_pos(self):
@@ -224,9 +230,17 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, dt):
 
+
         #nomalizing a vector
         if self.direction.magnitude() > 0:
             self.direction = self.direction.normalize()
+            if not self.isMoving:
+                self.footstep.play(loops = -1)
+                self.isMoving = True
+        else:
+            self.footstep.stop()
+            self.isMoving = False
+
 
         #horizontal movement
         self.pos.x += self.direction.x * self.speed * dt

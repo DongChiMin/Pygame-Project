@@ -50,6 +50,14 @@ class Level:
         #dialogue
         self.dialogue_manager = DialogueManager(self.display_surface)
 
+        #sound
+        path = f"../audio/"
+        self.collect_sound = pygame.mixer.Sound(f"{path}collect.wav")
+        self.BG_sunny_music = [f"{path}sunnymusic1.mp3", f"{path}sunnymusic2.mp3",f"{path}sunnymusic3.mp3"]
+        self.BG_rain_music = [f"{path}rainmusic1.mp3", f"{path}rainmusic2.mp3", f"{path}rainmusic3.mp3"]
+        self.rain_sound = pygame.mixer.Sound(f"{path}rain.mp3")
+        self.day_sound()
+
     def setup(self):
         tmx_data = load_pygame('../data/map.tmx')
 
@@ -136,6 +144,7 @@ class Level:
             z = LAYERS["ground"])
 
     def player_add_item (self, item):
+        self.collect_sound.play()
         self.player.item_inventory[item] += 1
         item_image = pygame.image.load(f'../graphics/items/{item}.png').convert_alpha()
         self.ui.add_item_display(item_image)  # Thêm item vào danh sách hiển thị
@@ -148,10 +157,11 @@ class Level:
         self.soil_layer.update_plants()
         # soil
         self.soil_layer.remove_water()
-        self.raining = randint(0, 10) > 3
+        self.raining = randint(0, 10) > 7
         self.soil_layer.raining = self.raining
         if self.raining:
-            self.soil_layer.water_all() 
+            self.soil_layer.water_all()
+
 
         # apple on the tree
         for tree in self.tree_sprites.sprites():
@@ -162,6 +172,26 @@ class Level:
 
         # hien
         self.sky.start_color = [255, 255, 255]
+
+        #sound
+        self.day_sound()
+
+    def day_sound(self):
+        # sound
+        pygame.mixer.stop()
+
+        index = randint(0, 2)
+
+        if self.raining:
+            BG_music = pygame.mixer.Sound(self.BG_rain_music[index])
+            self.rain_sound.play(loops=-1)
+            BG_music.set_volume(0.5)
+            BG_music.play()
+        else:
+            BG_music = pygame.mixer.Sound(self.BG_sunny_music[index])
+            BG_music.set_volume(0.5)
+            BG_music.play()
+
 
     def plant_collision(self):
         if self.soil_layer.plant_sprites:
