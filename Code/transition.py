@@ -13,7 +13,7 @@ class Transition:
         self.image = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.color = 255 #RGB(255, 255, 255) -> white
         (0, 0, 0)
-        self.speed = -2
+        self.speed = -5
 
     def play(self):
         self.color += self.speed

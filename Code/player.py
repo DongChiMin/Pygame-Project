@@ -154,6 +154,20 @@ class Player(pygame.sprite.Sprite):
             #             self.status = 'left_idle'
             #             self.sleep = True
 
+            if keys[pygame.K_f]:
+                collied_interaction_sprite = pygame.sprite.spritecollide(self, self.interaction, False)
+                if collied_interaction_sprite:
+                    if collied_interaction_sprite[0].name == 'Bed':
+                        self.status = 'left_idle'
+                        self.sleep = True
+
+    def open_trader(self):
+        print("opening trader")
+        self.toggle_UI()
+
+    def end_conservation(self):
+        pass
+
     def input_tool_use(self):
         self.timers['tool use'].activate()
         self.direction = pygame.math.Vector2()

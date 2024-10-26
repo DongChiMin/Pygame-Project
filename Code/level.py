@@ -13,6 +13,7 @@ from sky import Rain, Sky
 from random import randint
 from menu import Menu
 from ui import ui
+from dialogue_manager import DialogueManager
 
 class Level:
     def __init__(self):
@@ -30,6 +31,7 @@ class Level:
         self.overlay = Overlay(self.player)
 
         self.transition = Transition(self.reset_day, self.player)
+        self.time_changeable = False
 
         # sky
         self.rain_overlay = RainOverlay()
@@ -44,6 +46,9 @@ class Level:
         #shop
         self.Menu = Menu(self.player, self.toggle_UI)
         self.UI_menu_active = False
+
+        #dialogue
+        self.dialogue_manager = DialogueManager(self.display_surface)
 
     def setup(self):
         tmx_data = load_pygame('../data/map.tmx')
@@ -114,6 +119,13 @@ class Level:
                     groups=self.interaction_sprites,
                     name=obj.name
                 )
+            if obj.name == 'Guide':
+                Interaction(
+                    pos=(obj.x, obj.y),
+                    size=(obj.width, obj.height),
+                    groups=self.interaction_sprites,
+                    name=obj.name
+                )
 
 
         #background loading
@@ -171,7 +183,7 @@ class Level:
 
         if self.raining:
             self.rain_overlay.display()
-            if not self.UI_menu_active and not self.ui.ui_opened:
+            if not self.UI_menu_active and not self.ui.ui_opened and not self.ui.dialogue_manager.in_dialogue:
                 self.rain.update()
 
         # updates
@@ -181,6 +193,8 @@ class Level:
             self.Menu.update()
         elif self.ui.ui_opened:
             self.sky.display(dt, True)
+        elif self.ui.dialogue_manager.in_dialogue:
+            self.sky.display(dt, False)
         else:
             # daytime
             self.sky.display(dt, False)
@@ -189,7 +203,7 @@ class Level:
             self.plant_collision()
 
 
-        if not self.ui.ui_opened:
+        if not self.ui.ui_opened and not self.ui.dialogue_manager.in_dialogue:
             self.overlay.display()
         self.ui.run()
 
@@ -199,8 +213,13 @@ class Level:
         #show inventory log
         #print(self.player.item_inventory)
 
+        if self.transition.color <= 0:
+            self.time_changeable = True;
+
         if self.player.sleep:
             self.transition.play()
+        else:
+            self.time_changeable = False
 
 
 
