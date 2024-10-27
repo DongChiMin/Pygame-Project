@@ -66,7 +66,7 @@ class SoilLayer:
 
         #sound
         self.plant_sound = pygame.mixer.Sound("../audio/plant.wav")
-        self.plant_sound.set_volume(3)
+        self.plant_sound.set_volume(5)
         self.hoe = pygame.mixer.Sound('../audio/hoe.wav')
 
 
@@ -151,17 +151,20 @@ class SoilLayer:
         y = pos[1] // TILE_SIZE
         return 'U' in self.grid[y][x]  # Kiểm tra xem ô có được tưới không
 
+
+
     def plant_seed(self, target_pos, seed):
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(target_pos):
-                self.plant_sound.play()
-
                 x = soil_sprite.rect.x // TILE_SIZE
                 y = soil_sprite.rect.y // TILE_SIZE
                 if 'P' not in self.grid[y][x]:  # Kiểm tra ô đã có cây chưa
                     self.grid[y][x].append('P')
+                    self.plant_sound.play()
                     Plant(seed, [self.all_sprites, self.plant_sprites, self.collision_sprites], soil_sprite,
                           self.check_watered)
+                    return True
+                return False
 
     def update_plants(self):
         for plant in self.plant_sprites.sprites():

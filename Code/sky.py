@@ -43,7 +43,7 @@ class Sky:
             for index, value in enumerate(self.end_color):
                 if self.start_color[index] > value:
                     #300s dau tien chay toc do 0.4, con lai chay toc do 1
-                    if self.time <= 270:
+                    if self.time <= 200:
                         self.start_color[index] -= 0.4 * dt
                     else:
                         self.start_color[index] -= 1 * dt

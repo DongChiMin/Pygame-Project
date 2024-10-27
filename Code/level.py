@@ -36,7 +36,7 @@ class Level:
         # sky
         self.rain_overlay = RainOverlay()
         self.rain = Rain(self.all_sprites)
-        self.raining = randint(0, 10) > 3
+        self.raining = randint(0, 10) > 7
         self.soil_layer.raining = self.raining
         self.sky = Sky()
 

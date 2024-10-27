@@ -6,16 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="c0bb761f-e872-4f27-a883-78be55584c6a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Audio/button.wav" beforeDir="false" afterPath="$PROJECT_DIR$/Audio/button.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Audio/cricket.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/Audio/cricket.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/level.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/overlay.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/overlay.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/sky.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/sky.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/soil.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/soil.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/sprites.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/sprites.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graphics/overlay/setting_ui.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

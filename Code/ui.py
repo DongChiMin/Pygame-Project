@@ -82,6 +82,9 @@ class ui:
         self.setting_UI_surf = pygame.image.load('../graphics/UI/setting_ui.png').convert_alpha()
         self.highlight_setting_UI_surf = pygame.image.load('../graphics/UI/highlight_setting_ui.png').convert_alpha()
         self.setting_UI_rect = self.setting_UI_surf.get_rect(topleft=OVERLAY_POSITIONS['setting_UI'])
+        #BG setting
+        self.setting_bg = pygame.image.load('../graphics/UI/setting_bg.png').convert_alpha()
+        self.setting_bg_rect = self.setting_bg.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
 
         #vẽ Bg backpack
         self.ui_backpack_surf = pygame.image.load('../graphics/ui/backpack.png').convert_alpha()
@@ -90,12 +93,23 @@ class ui:
         #vẽ nút exit
         self.exit_button_surf = pygame.image.load('../graphics/ui/exit_button.png').convert_alpha()
         self.exit_button_hover_surf = pygame.image.load('../graphics/ui/exit_button_hover.png').convert_alpha()
-        self.exit_button_rect = self.exit_button_surf.get_rect(topright = (self.ui_backpack_rect.right - 32, self.ui_backpack_rect.top + 67))
+        self.exit_button_rect = self.exit_button_surf.get_rect(topright = (SCREEN_WIDTH, SCREEN_HEIGHT))
+
+
+        #vẽ nhiệm vụ
+        self.quest = pygame.image.load('../graphics/ui/quest.png').convert_alpha()
+        self.highlight_quest = pygame.image.load('../graphics/ui/quest_hover.png').convert_alpha()
+        self.quest_rect = self.quest.get_rect(midright = (SCREEN_WIDTH - 20, SCREEN_HEIGHT // 2 - 60 ))
+        #BG nhiệm vụ
+        self.ui_quest_bg = pygame.image.load('../graphics/ui/quest_bg.png').convert_alpha()
+        self.ui_quest_bg_rect = self.ui_quest_bg.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
 
         #các cờ (flags)
         self.ui_opened = False
         self.opening_backpack = False
         self.is_mouse_on_UI = False
+        self.opening_quest = False
+        self.opening_setting = False
 
         #list lưu các UI đang hiện
         self.active_ui_rects = []
@@ -103,15 +117,18 @@ class ui:
         self.active_ui_rects.append(self.overlay.center_tool_rect)
         self.active_ui_rects.append(self.overlay.center_seed_rect)
         self.active_ui_rects.append(self.setting_UI_rect)
+        self.active_ui_rects.append(self.quest_rect)
 
         #timer
-        self.remove_backpack_ui = Timer(500, self.remove_ui_elements)
+        self.remove_backpack_ui = Timer(300, self.remove_ui_elements)
+        self.remove_quest_ui = Timer(300, self.remove_ui_elements)
+        self.remove_setting_ui = Timer(300, self.remove_ui_elements)
 
         #sound
         self.button_sound = pygame.mixer.Sound('../audio/button.wav')
         self.button1_sound = pygame.mixer.Sound('../audio/button1.wav')
         self.cricket_sound = pygame.mixer.Sound('../audio/cricket.mp3')
-        self.cricket_sound.set_volume(0.1)
+        self.cricket_sound.set_volume(0.3)
 
     # Hàm để vẽ UI lên màn hình
     def draw_UI(self):
@@ -129,6 +146,17 @@ class ui:
 
         #vẽ backpack icon
         self.display_surface.blit(self.backpack_icon_surf, self.backpack_icon_rect)
+
+        #vẽ nhiệm vụ
+        if self.check_hover(self.quest_rect):
+            self.display_surface.blit(self.highlight_quest, self.quest_rect)  # Vẽ hình ảnh hover
+        else:
+            self.display_surface.blit(self.quest, self.quest_rect)  # Vẽ hình ảnh bình thường
+        # quest_text = f"MAKE MONEY:"
+        # self.draw_text_with_outline(quest_text, SCREEN_WIDTH - 120, SCREEN_HEIGHT // 2 - 60, COLOR_MAIN, COLOR_BASE_1_LIGHT, 3)
+        # quest_text1 = f"Make {self.player.money}/5000"
+        # self.draw_text_with_outline(quest_text, SCREEN_WIDTH - 120, SCREEN_HEIGHT // 2 - 80, COLOR_MAIN,
+        #                             COLOR_BASE_1_LIGHT, 3)
 
         #vẽ Icon weather
         if self.level.raining:
@@ -225,6 +253,18 @@ class ui:
 
             # Vẽ hình ảnh tại vị trí cụ thể
             self.display_surface.blit(item_image, item['position'])
+
+    def draw_ui_setting(self):
+        self.display_surface.blit(self.setting_bg, self.setting_bg_rect)
+        if self.setting_bg_rect not in self.active_ui_rects:
+            self.active_ui_rects.append(self.setting_bg_rect)
+        self.draw_exit_button()
+
+    def draw_ui_quest(self):
+        self.display_surface.blit(self.ui_quest_bg, self.ui_quest_bg_rect)
+        if self.ui_quest_bg_rect not in self.active_ui_rects:
+            self.active_ui_rects.append(self.ui_quest_bg_rect)
+        self.draw_exit_button()
 
     def draw_ui_backpack(self):
         #vẽ background backpack
@@ -345,9 +385,29 @@ class ui:
         if mouses[0] == 1:
             #neu ui dang dong:
             if not self.ui_opened:
+
+
                 if self.check_hover(self.backpack_button_rect):
                     self.button_sound.play()
                     self.opening_backpack = True
+                    self.exit_button_rect = self.exit_button_surf.get_rect(
+                        topright=(self.ui_backpack_rect.right - 32, self.ui_backpack_rect.top + 67))
+                    self.ui_opened = True
+
+
+                if self.check_hover(self.quest_rect):
+                    self.button_sound.play()
+                    self.opening_quest= True
+                    self.exit_button_rect = self.exit_button_surf.get_rect(
+                        topright=(self.ui_quest_bg_rect.right - 32, self.ui_quest_bg_rect.top + 55))
+                    self.ui_opened = True
+
+
+                if self.check_hover(self.setting_UI_rect):
+                    self.button_sound.play()
+                    self.opening_setting = True
+                    self.exit_button_rect = self.exit_button_surf.get_rect(
+                        topright=(self.setting_bg_rect.right - 32, self.setting_bg_rect.top + 45))
                     self.ui_opened = True
             #neu ui dang mo
             else:
@@ -357,13 +417,29 @@ class ui:
                     self.button1_sound.play()
                     if self.opening_backpack:
                         self.opening_backpack = False
-                        self.ui_opened = False
                         self.remove_backpack_ui.activate()
+                    if self.opening_quest:
+                        self.opening_quest = False
+                        self.remove_quest_ui.activate()
+                    if self.opening_setting:
+                        self.opening_setting = False
+                        self.remove_setting_ui.activate()
+                    self.ui_opened = False
+
         elif keys[pygame.K_ESCAPE]:
             if self.opening_backpack:
                 self.opening_backpack = False
-                self.ui_opened = False
                 self.remove_backpack_ui.activate()
+                self.button1_sound.play()
+            if self.opening_setting:
+                self.opening_setting = False
+                self.remove_setting_ui.activate()
+                self.button1_sound.play()
+            if self.opening_quest:
+                self.opening_quest = False
+                self.remove_quest_ui.activate()
+                self.button1_sound.play()
+            self.ui_opened = False
 
     def player_click(self):
         # Kiểm tra nếu chuột trái được bấm khi không hover
@@ -396,6 +472,11 @@ class ui:
             self.active_ui_rects.remove(self.exit_button_rect)
         if self.ui_backpack_rect in self.active_ui_rects:
             self.active_ui_rects.remove(self.ui_backpack_rect)
+        if self.ui_quest_bg_rect in self.active_ui_rects:
+            self.active_ui_rects.remove(self.ui_quest_bg_rect)
+        if self.setting_bg_rect in self.active_ui_rects:
+            self.active_ui_rects.remove(self.setting_bg_rect)
+
 
     def run(self):
 
@@ -422,9 +503,15 @@ class ui:
 
         if self.opening_backpack:
             self.draw_ui_backpack()
+        if self.opening_quest:
+            self.draw_ui_quest()
+        if self.opening_setting:
+            self.draw_ui_setting()
 
         #delay 0.5s trước khi tắt UI backpack
         self.remove_backpack_ui.update()
+        self.remove_setting_ui.update()
+        self.remove_quest_ui.update()
 
         #hội thoại
         self.dialogue_manager.handle_input()
