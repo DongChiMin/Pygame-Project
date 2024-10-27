@@ -67,6 +67,7 @@ class SoilLayer:
         #sound
         self.plant_sound = pygame.mixer.Sound("../audio/plant.wav")
         self.plant_sound.set_volume(3)
+        self.hoe = pygame.mixer.Sound('../audio/hoe.wav')
 
 
     def create_soil_grid(self):
@@ -100,7 +101,7 @@ class SoilLayer:
         for rect in self.hit_rects:
             # kiểm tra tọa độ chuẩn đang nằm tại tiles bao nhiêu
             if rect.collidepoint(point):
-
+                self.hoe.play()
 
                 x = rect.x // TILE_SIZE
                 y = rect.y // TILE_SIZE

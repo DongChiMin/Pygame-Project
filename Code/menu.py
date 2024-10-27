@@ -30,6 +30,10 @@ class Menu:
         self.index = 0
         self.timer = Timer(200)
 
+        #sound
+        self.purchase = pygame.mixer.Sound('../audio/purchase.wav')
+        self.sell = pygame.mixer.Sound('../audio/sell.wav')
+        self.button1_sound = pygame.mixer.Sound('../audio/button1.wav')
 
     def setup(self):
         #create the text surfaces
@@ -55,15 +59,6 @@ class Menu:
         self.buy_text = self.font.render('buy', False, (170, 121, 89))
         self.sell_text = self.font.render('sell', False, (170, 121, 89))
 
-    def display_money(self):
-        text_surf = self.font.render( f"money: {self.player.money}",False,(170,121,89))
-        text_rect = text_surf.get_rect(midtop = (SCREEN_WIDTH / 2, 25) )
-
-        #inflate: hình chữ nhật bao quanh, 6: bo tròn
-        pygame.draw.rect(self.display_surface, (170, 121, 89), text_rect.inflate(30, 30), 0, 6)
-        pygame.draw.rect(self.display_surface, (232,207,166), text_rect.inflate(20,20),0 , 6)
-        self.display_surface.blit(text_surf, text_rect)
-
     def input(self):
         # Lấy vị trí chuột và trạng thái các nút
         mouse_pos = pygame.mouse.get_pos()
@@ -73,6 +68,7 @@ class Menu:
 
         # nếu nhấn esc: tắt ui
         if keys[pygame.K_ESCAPE]:
+            self.button1_sound.play()
             self.toggle_UI()
 
         # Kiểm tra xem chuột có hover vào mục nào trong danh sách không
@@ -86,19 +82,23 @@ class Menu:
             if entry_rect.collidepoint(mouse_pos):
                 self.index = text_index  # Cập nhật index để đánh dấu mục đang hover
 
+
                 if not self.timer.active:
                     # Nếu nhấn chuột trái (click chuột)
                     if mouse_click[0]:  # [0] là chuột trái
+
                         current_item = self.options[self.index]
                         self.timer.activate()
 
                         # Sell
                         if self.index <= self.sell_border:
+                            self.sell.play()
                             if self.player.item_inventory[current_item] > 0:
                                 self.player.item_inventory[current_item] -= 1
                                 self.player.money += SALE_PRICES[current_item]
                         # Buy
                         else:
+                            self.purchase.play()
                             seed_price = PURCHASE_PRICES[current_item]
                             if self.player.money >= seed_price:
                                 self.player.seed_inventory[current_item] += 1
@@ -184,7 +184,6 @@ class Menu:
 
     def update(self):
         self.input()
-        self.display_money()
 
 
         #in ra nền background

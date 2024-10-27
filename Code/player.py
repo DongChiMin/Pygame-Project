@@ -69,6 +69,8 @@ class Player(pygame.sprite.Sprite):
         self.isMoving = False
         self.watering = pygame.mixer.Sound("../audio/watering.wav")
         self.footstep = pygame.mixer.Sound("../audio/footstep.mp3")
+        self.footstep.set_volume(1.5)
+        self.button_sound = pygame.mixer.Sound('../audio/button.wav')
 
     def use_tool(self):
         print(f"Tool use = {self.selected_tool}")
@@ -168,6 +170,7 @@ class Player(pygame.sprite.Sprite):
                         self.sleep = True
 
     def open_trader(self):
+        self.button_sound.play()
         print("opening trader")
         self.toggle_UI()
 
@@ -235,7 +238,7 @@ class Player(pygame.sprite.Sprite):
         if self.direction.magnitude() > 0:
             self.direction = self.direction.normalize()
             if not self.isMoving:
-                self.footstep.play(loops = -1)
+                self.footstep.play(loops = -1   )
                 self.isMoving = True
         else:
             self.footstep.stop()

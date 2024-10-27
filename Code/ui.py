@@ -32,7 +32,6 @@ class ui:
         self.trader_avt = pygame.image.load('../graphics/ui/trader_avt.png').convert_alpha()
         self.guide_avt = pygame.image.load('../graphics/ui/guide_avt.png').convert_alpha()
 
-
         # Thêm thuộc tính cho ngày
         self.current_day = 1  # Ngày bắt đầu
         self.day_changing = False
@@ -42,7 +41,7 @@ class ui:
         self.current_minute = 0  # 0 phút
         self.time_running = True  # Biến để kiểm soát thời gian chạy
         # Biến để điều chỉnh tốc độ thời gian
-        self.time_speed = 1200  # Số mili giây giữa các lần cập nhật phút
+        self.time_speed = 2600  # Số mili giây giữa các lần cập nhật phút
         self.last_time_update = pygame.time.get_ticks()  # Thời gian của lần cập nhật cuối
 
         # Khởi tạo danh sách hiển thị item
@@ -78,6 +77,12 @@ class ui:
         self.cursor_rect = self.cursor_surf.get_rect()
         pygame.mouse.set_visible(False)
 
+        #vẽ nút setting
+        # setting_UI
+        self.setting_UI_surf = pygame.image.load('../graphics/UI/setting_ui.png').convert_alpha()
+        self.highlight_setting_UI_surf = pygame.image.load('../graphics/UI/highlight_setting_ui.png').convert_alpha()
+        self.setting_UI_rect = self.setting_UI_surf.get_rect(topleft=OVERLAY_POSITIONS['setting_UI'])
+
         #vẽ Bg backpack
         self.ui_backpack_surf = pygame.image.load('../graphics/ui/backpack.png').convert_alpha()
         self.ui_backpack_rect = self.ui_backpack_surf.get_rect(center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
@@ -97,11 +102,16 @@ class ui:
         self.active_ui_rects.append(self.backpack_button_rect)
         self.active_ui_rects.append(self.overlay.center_tool_rect)
         self.active_ui_rects.append(self.overlay.center_seed_rect)
+        self.active_ui_rects.append(self.setting_UI_rect)
 
         #timer
         self.remove_backpack_ui = Timer(500, self.remove_ui_elements)
 
-
+        #sound
+        self.button_sound = pygame.mixer.Sound('../audio/button.wav')
+        self.button1_sound = pygame.mixer.Sound('../audio/button1.wav')
+        self.cricket_sound = pygame.mixer.Sound('../audio/cricket.mp3')
+        self.cricket_sound.set_volume(0.1)
 
     # Hàm để vẽ UI lên màn hình
     def draw_UI(self):
@@ -110,6 +120,12 @@ class ui:
             self.display_surface.blit(self.backpack_button_hover_surf, self.backpack_button_rect)  # Vẽ hình ảnh hover
         else:
             self.display_surface.blit(self.backpack_button_surf, self.backpack_button_rect)  # Vẽ hình ảnh bình thường
+
+        # Vẽ nút setting
+        if self.check_hover(self.setting_UI_rect):
+            self.display_surface.blit(self.highlight_setting_UI_surf, self.setting_UI_rect)  # Vẽ hình ảnh hover
+        else:
+            self.display_surface.blit(self.setting_UI_surf, self.setting_UI_rect)  # Vẽ hình ảnh bình thường
 
         #vẽ backpack icon
         self.display_surface.blit(self.backpack_icon_surf, self.backpack_icon_rect)
@@ -168,13 +184,18 @@ class ui:
             self.set_sleep_time()
 
     def draw_time(self):
+            #nếu là 7 giờ tối: âm thanh dế
+            if self.current_hour == 19:
+                print("cricket sound")
+                self.cricket_sound.play(loops=-1)
+
             # Chuyển đổi giờ và phút thành định dạng chuỗi
             time_text = f"{int(self.current_hour)}:{int(self.current_minute):02d}"
-            self.draw_text_with_outline(time_text, 100, 50, WHITE, COLOR_MAIN)  # Vẽ giờ ở vị trí (100, 50)
+            self.draw_text_with_outline(time_text, SCREEN_WIDTH //2, 30, COLOR_MAIN, COLOR_BASE_1_LIGHT, 3)  # Vẽ giờ ở vị trí (100, 50)
 
             # Vẽ ngày
             day_text = f"Day {self.current_day}"  # Định dạng chuỗi ngày
-            self.draw_text_with_outline(day_text, 100, 80, WHITE, COLOR_MAIN)  # Vẽ ngày ở vị trí (100, 80)
+            self.draw_text_with_outline(day_text,  SCREEN_WIDTH // 2, 60, COLOR_MAIN, COLOR_BASE_1_LIGHT, 3)  # Vẽ ngày ở vị trí (100, 80)
 
     def add_item_display(self, item_image):
         # Mỗi item là một dictionary chứa thông tin về hình ảnh, alpha, và thời gian
@@ -236,18 +257,18 @@ class ui:
         # Vẽ các items trong inventory
         for index, item in enumerate(items_and_seeds):
             # Vẽ chữ có viền
-            self.draw_text_with_outline(item, start_x + index * item_spacing, start_y, WHITE, COLOR_MAIN)
+            self.draw_text_with_outline(item, start_x + index * item_spacing, start_y, WHITE, COLOR_MAIN, 3)
 
-    def draw_text_with_outline(self, text, x, y, stroke, color):
+    def draw_text_with_outline(self, text, x, y, stroke, color, stroke_size):
         # Vẽ viền
         outline_text_surf = self.font.render(text, False, stroke)  # Màu viền (color)
         outline_rect = outline_text_surf.get_rect(center=(x, y))
 
         # Vẽ viền xung quanh bằng cách dịch chuyển
-        self.display_surface.blit(outline_text_surf, outline_rect.move(-3, 0))
-        self.display_surface.blit(outline_text_surf, outline_rect.move(3, 0))
-        self.display_surface.blit(outline_text_surf, outline_rect.move(0, -3))
-        self.display_surface.blit(outline_text_surf, outline_rect.move(0, 3))
+        self.display_surface.blit(outline_text_surf, outline_rect.move(-stroke_size, 0))
+        self.display_surface.blit(outline_text_surf, outline_rect.move(stroke_size, 0))
+        self.display_surface.blit(outline_text_surf, outline_rect.move(0, -stroke_size))
+        self.display_surface.blit(outline_text_surf, outline_rect.move(0, stroke_size))
 
         # Vẽ chữ chính
         text_surf = self.font.render(text, False, color)  # Màu chữ chính
@@ -256,12 +277,8 @@ class ui:
     def draw_exit_button(self):
         # vẽ nút exit
         if self.check_hover(self.exit_button_rect):
-            if not self.button_sound_playing:
-                self.button_sound.play()
-                self.button_sound_playing = True
             self.display_surface.blit(self.exit_button_hover_surf, self.exit_button_rect)
         else:
-            self.button_sound_playing = False
             self.display_surface.blit(self.exit_button_surf, self.exit_button_rect)
         if self.exit_button_rect not in self.active_ui_rects:
             self.active_ui_rects.append(self.exit_button_rect)
@@ -295,13 +312,13 @@ class ui:
                     self.display_surface.blit(self.trader_avt, avt_rect)
                     # Vẽ tên Trader dưới hình đại diện
                     self.draw_text_with_outline("Trader", frame_rect.centerx,
-                                                avt_rect.bottom + 20, COLOR_MAIN, COLOR_BASE_1_LIGHT)  # Điều chỉnh vị trí nếu cần
+                                                avt_rect.bottom + 20, COLOR_MAIN, COLOR_BASE_1_LIGHT, 3)  # Điều chỉnh vị trí nếu cần
                 elif collied_interaction_sprite[0].name == 'Guide':
                     avt_rect = self.guide_avt.get_rect(center=frame_rect.center)
                     self.display_surface.blit(self.guide_avt, avt_rect)
                     # Vẽ tên Guide dưới hình đại diện
                     self.draw_text_with_outline("Guide", frame_rect.centerx,
-                                                avt_rect.bottom + 20, COLOR_MAIN, COLOR_BASE_1_LIGHT)  # Điều chỉnh vị trí nếu cần
+                                                avt_rect.bottom + 20, COLOR_MAIN, COLOR_BASE_1_LIGHT, 3)  # Điều chỉnh vị trí nếu cần
 
         self.dialogue_manager.draw()  # Vẽ hội thoại
 
@@ -329,6 +346,7 @@ class ui:
             #neu ui dang dong:
             if not self.ui_opened:
                 if self.check_hover(self.backpack_button_rect):
+                    self.button_sound.play()
                     self.opening_backpack = True
                     self.ui_opened = True
             #neu ui dang mo
@@ -336,6 +354,7 @@ class ui:
 
                 if self.check_hover(self.exit_button_rect):
                     #nếu đang mở backpack
+                    self.button1_sound.play()
                     if self.opening_backpack:
                         self.opening_backpack = False
                         self.ui_opened = False
@@ -391,7 +410,6 @@ class ui:
 
 
         # Vẽ giờ
-        self.time_on()
         self.draw_time()
 
         #cập nhật ngày

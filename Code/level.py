@@ -192,7 +192,6 @@ class Level:
             BG_music.set_volume(0.5)
             BG_music.play()
 
-
     def plant_collision(self):
         if self.soil_layer.plant_sprites:
             for plant in self.soil_layer.plant_sprites.sprites():
@@ -231,14 +230,13 @@ class Level:
             # neu khong hien UI thi sprites mới được update
             self.all_sprites.update(dt)
             self.plant_collision()
+            # neu khong hien UI moi duoc update time
+            self.ui.time_on()
 
 
         if not self.ui.ui_opened and not self.ui.dialogue_manager.in_dialogue:
             self.overlay.display()
         self.ui.run()
-
-
-
 
         #show inventory log
         #print(self.player.item_inventory)
