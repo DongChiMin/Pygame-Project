@@ -223,7 +223,7 @@ class Level:
         elif self.ui.ui_opened:
             self.sky.display(dt, True)
         elif self.ui.dialogue_manager.in_dialogue:
-            self.sky.display(dt, False)
+            self.sky.display(dt, True)
         else:
             # daytime
             self.sky.display(dt, False)
