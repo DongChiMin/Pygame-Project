@@ -41,7 +41,7 @@ class ui:
         self.current_minute = 0  # 0 phút
         self.time_running = True  # Biến để kiểm soát thời gian chạy
         # Biến để điều chỉnh tốc độ thời gian
-        self.time_speed = 2600  # Số mili giây giữa các lần cập nhật phút
+        self.time_speed = 7800  # Số mili giây giữa các lần cập nhật phút
         self.last_time_update = pygame.time.get_ticks()  # Thời gian của lần cập nhật cuối
 
         # Khởi tạo danh sách hiển thị item
@@ -183,7 +183,7 @@ class ui:
             if current_time - self.last_time_update >= self.time_speed:  # Kiểm tra nếu đủ thời gian để cập nhật
                 self.last_time_update = current_time  # Cập nhật thời gian lần cập nhật cuối
 
-                self.current_minute += 10  # Tăng phút
+                self.current_minute += 30  # Tăng phút
                 if self.current_minute >= 60:  # Nếu phút đạt 60
                     self.current_minute = 0  # Reset phút
                     self.current_hour += 1  # Tăng giờ

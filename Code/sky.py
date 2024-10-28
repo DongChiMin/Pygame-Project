@@ -39,14 +39,13 @@ class Sky:
 
     def display(self, dt, OnUI):
         if not OnUI:
+            print(self.time)
             self.time += dt
             for index, value in enumerate(self.end_color):
                 if self.start_color[index] > value:
-                    #300s dau tien chay toc do 0.4, con lai chay toc do 1
-                    if self.time <= 200:
-                        self.start_color[index] -= 0.4 * dt
-                    else:
-                        self.start_color[index] -= 1 * dt
+                    #sau 165 deltaTime thi troi bat dau toi
+                    if self.time >= 165:
+                        self.start_color[index] -= 3 * dt
 
         self.full_surf.fill(self.start_color)
         self.display_surface.blit(self.full_surf, (0, 0), special_flags = pygame.BLEND_RGBA_MULT)

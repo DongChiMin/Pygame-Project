@@ -246,6 +246,7 @@ class Level:
 
         if self.player.sleep:
             self.transition.play()
+            self.sky.time = 0
         else:
             self.time_changeable = False
 
