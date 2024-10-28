@@ -28,15 +28,15 @@ class Overlay:
         self.corner_q_surf = pygame.image.load(f'{overlay_path}q.png').convert_alpha()
         self.corner_e_surf = pygame.image.load(f'{overlay_path}e.png').convert_alpha()
 
-        # setting_UI
-        self.setting_UI_surf = pygame.image.load(f'{overlay_path}setting_ui.png').convert_alpha()
-
 
 
         # kiểm tra trạng thái
         self.clicked = False
         self.Q_pressed = False
         self.E_pressed = False
+
+        #sound
+        self.button2_sound = pygame.mixer.Sound('../audio/button2.wav')
 
     def display(self):
         # tools
@@ -66,11 +66,6 @@ class Overlay:
         corner_e_rect = self.corner_e_surf.get_rect(topright=(
             self.center_seed_rect.right + 10, self.center_seed_rect.top - 10))
 
-
-        # setting_UI
-        setting_UI_rect = self.setting_UI_surf.get_rect(topleft=OVERLAY_POSITIONS['setting_UI'])
-        self.display_surface.blit(self.setting_UI_surf, setting_UI_rect)
-
         # Draw square
         self.display_surface.blit(self.center_tool_surf, self.center_tool_rect)
         self.display_surface.blit(self.center_seed_surf, self.center_seed_rect)
@@ -99,6 +94,7 @@ class Overlay:
             surf = highlight_surf
 
             if pygame.mouse.get_pressed()[0] == 1 and not self.clicked:
+                self.button2_sound.play()
                 self.clicked = True
                 action()  # Perform the action (change tool or seed)
         elif not self.Q_pressed or not self.E_pressed:

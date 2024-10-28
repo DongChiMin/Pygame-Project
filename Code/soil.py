@@ -1,6 +1,7 @@
 
 
 import pygame
+from fontTools.ttLib.tables.E_B_L_C_ import eblc_index_sub_table_1
 
 from settings import *
 from pytmx.util_pygame import load_pygame
@@ -11,6 +12,7 @@ from random import choice
 class Plant(pygame.sprite.Sprite):
     def __init__(self, plant_type, groups, soil, check_watered):
         super().__init__(groups)
+
         self.plant_type = plant_type
         self.frames = import_folder(f'../graphics/fruit/{plant_type}')
         self.soil = soil
@@ -24,7 +26,7 @@ class Plant(pygame.sprite.Sprite):
 
         # Cài đặt sprite
         self.image = self.frames[self.age]
-        self.y_offset = -16 if plant_type == 'corn' else -8
+        self.y_offset = -16 if plant_type == 'wheat' else -8
         self.rect = self.image.get_rect(midbottom=self.soil.rect.midbottom + pygame.math.Vector2(0, self.y_offset))
         self.z = LAYERS['ground plant']
 
@@ -47,6 +49,7 @@ class Plant(pygame.sprite.Sprite):
 class SoilLayer:
     def __init__(self, all_sprites, collision_sprites):
 #hien
+
         # sprite groups
         self.all_sprites = all_sprites
         self.soil_sprites = pygame.sprite.Group()
@@ -61,11 +64,10 @@ class SoilLayer:
         self.create_soil_grid()
         self.create_hit_rects()
 
-        self.hoe_sound = pygame.mixer.Sound("../audio/hoe.wav")
-        self.hoe_sound.set_volume(0.1)
-
-        self.plant = pygame.mixer.Sound("../audio/plant.wav")
-        self.plant.set_volume(0.2)
+        #sound
+        self.plant_sound = pygame.mixer.Sound("../audio/plant.wav")
+        self.plant_sound.set_volume(5)
+        self.hoe = pygame.mixer.Sound('../audio/hoe.wav')
 
 
     def create_soil_grid(self):
@@ -99,7 +101,8 @@ class SoilLayer:
         for rect in self.hit_rects:
             # kiểm tra tọa độ chuẩn đang nằm tại tiles bao nhiêu
             if rect.collidepoint(point):
-                self.hoe_sound.play()
+                self.hoe.play()
+
                 x = rect.x // TILE_SIZE
                 y = rect.y // TILE_SIZE
                 if 'F' in self.grid[y][x]:
@@ -112,6 +115,7 @@ class SoilLayer:
     def water(self, target_pos):
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(target_pos):
+
                 x = soil_sprite.rect.x // TILE_SIZE
                 y = soil_sprite.rect.y // TILE_SIZE
                 self.grid[y][x].append('U')
@@ -147,16 +151,20 @@ class SoilLayer:
         y = pos[1] // TILE_SIZE
         return 'U' in self.grid[y][x]  # Kiểm tra xem ô có được tưới không
 
+
+
     def plant_seed(self, target_pos, seed):
         for soil_sprite in self.soil_sprites.sprites():
             if soil_sprite.rect.collidepoint(target_pos):
-                self.plant.play()
                 x = soil_sprite.rect.x // TILE_SIZE
                 y = soil_sprite.rect.y // TILE_SIZE
                 if 'P' not in self.grid[y][x]:  # Kiểm tra ô đã có cây chưa
                     self.grid[y][x].append('P')
+                    self.plant_sound.play()
                     Plant(seed, [self.all_sprites, self.plant_sprites, self.collision_sprites], soil_sprite,
                           self.check_watered)
+                    return True
+                return False
 
     def update_plants(self):
         for plant in self.plant_sprites.sprites():

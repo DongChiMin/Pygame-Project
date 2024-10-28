@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
         self.selected_tool = self.tools[self.tool_index]
 
         # seeds
-        self.seeds = ['corn', 'tomato']
+        self.seeds = ['wheat', 'tomato']
         self.seed_index = 0
         self.selected_seed = self.seeds[self.seed_index]
 
@@ -48,12 +48,12 @@ class Player(pygame.sprite.Sprite):
         self.item_inventory = {
             'wood': 0,
             'apple': 0,
-            'corn': 0,
+            'wheat': 0,
             'tomato': 0
         }
 
         self.seed_inventory = {
-            'corn' : 5,
+            'wheat' : 5,
             'tomato': 5
         }
         self.money = 200
@@ -66,8 +66,11 @@ class Player(pygame.sprite.Sprite):
         self.toggle_UI = toggle_UI
 
         #sound
-        self.watering = pygame.mixer.Sound("../audio/water.mp3")
-        self.watering.set_volume(0.2)
+        self.isMoving = False
+        self.watering = pygame.mixer.Sound("../audio/watering.wav")
+        self.footstep = pygame.mixer.Sound("../audio/footstep.mp3")
+        self.footstep.set_volume(1.5)
+        self.button_sound = pygame.mixer.Sound('../audio/button.wav')
 
     def use_tool(self):
         print(f"Tool use = {self.selected_tool}")
@@ -89,8 +92,9 @@ class Player(pygame.sprite.Sprite):
 # hien
     def use_seed(self):
         if self.seed_inventory[self.selected_seed] > 0:
-            self.soil_layer.plant_seed(self.target_pos, self.selected_seed)
-            self.seed_inventory[self.selected_seed] -= 1
+            #neu o dat chua co cay thi moi trong cay
+            if self.soil_layer.plant_seed(self.target_pos, self.selected_seed):
+                self.seed_inventory[self.selected_seed] -= 1
 
     def import_assets(self):
         self.animations = {'up': [], 'down': [], 'left': [], 'right': [],
@@ -149,14 +153,30 @@ class Player(pygame.sprite.Sprite):
             if keys[pygame.K_e] and not self.timers['seed switch'].active:
                 self.change_seed()
 
-            if keys[pygame.K_RETURN]:
+            # if keys[pygame.K_f]:
+            #     self.toggle_UI()
+            #     collied_interaction_sprite = pygame.sprite.spritecollide(self, self.interaction, False)
+            #     if collied_interaction_sprite:
+            #         if collied_interaction_sprite[0].name == 'Trader':
+            #             self.toggle_UI()
+            #         else:
+            #             self.status = 'left_idle'
+            #             self.sleep = True
+
+            if keys[pygame.K_f]:
                 collied_interaction_sprite = pygame.sprite.spritecollide(self, self.interaction, False)
                 if collied_interaction_sprite:
-                    if collied_interaction_sprite[0].name == 'Trader':
-                        self.toggle_UI()
-                    else:
+                    if collied_interaction_sprite[0].name == 'Bed':
                         self.status = 'left_idle'
                         self.sleep = True
+
+    def open_trader(self):
+        self.button_sound.play()
+        print("opening trader")
+        self.toggle_UI()
+
+    def end_conservation(self):
+        pass
 
     def input_tool_use(self):
         self.timers['tool use'].activate()
@@ -214,9 +234,17 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, dt):
 
+
         #nomalizing a vector
         if self.direction.magnitude() > 0:
             self.direction = self.direction.normalize()
+            if not self.isMoving:
+                self.footstep.play(loops = -1   )
+                self.isMoving = True
+        else:
+            self.footstep.stop()
+            self.isMoving = False
+
 
         #horizontal movement
         self.pos.x += self.direction.x * self.speed * dt

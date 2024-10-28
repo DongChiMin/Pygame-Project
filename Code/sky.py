@@ -35,11 +35,18 @@ class Sky:
         self.start_color = [255, 255, 255]
         self.end_color = (38, 101, 189)
 
+        self.time = 0
+
     def display(self, dt, OnUI):
         if not OnUI:
+            self.time += dt
             for index, value in enumerate(self.end_color):
                 if self.start_color[index] > value:
-                    self.start_color[index] -= 1 * dt
+                    #300s dau tien chay toc do 0.4, con lai chay toc do 1
+                    if self.time <= 200:
+                        self.start_color[index] -= 0.4 * dt
+                    else:
+                        self.start_color[index] -= 1 * dt
 
         self.full_surf.fill(self.start_color)
         self.display_surface.blit(self.full_surf, (0, 0), special_flags = pygame.BLEND_RGBA_MULT)

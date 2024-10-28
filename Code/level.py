@@ -13,6 +13,7 @@ from sky import Rain, Sky
 from random import randint
 from menu import Menu
 from ui import ui
+from dialogue_manager import DialogueManager
 
 class Level:
     def __init__(self):
@@ -30,6 +31,7 @@ class Level:
         self.overlay = Overlay(self.player)
 
         self.transition = Transition(self.reset_day, self.player)
+        self.time_changeable = False
 
         # sky
         self.rain_overlay = RainOverlay()
@@ -45,12 +47,16 @@ class Level:
         self.Menu = Menu(self.player, self.toggle_UI)
         self.UI_menu_active = False
 
+        #dialogue
+        self.dialogue_manager = DialogueManager(self.display_surface)
+
         #sound
-        self.background_music = pygame.mixer.Sound("../audio/music.mp3")
-        self.background_music.set_volume(0.5)
-        self.background_music.play()
-        self.success = pygame.mixer.Sound("../audio/success.wav")
-        self.success.set_volume(0.4)
+        path = f"../audio/"
+        self.collect_sound = pygame.mixer.Sound(f"{path}collect.wav")
+        self.BG_sunny_music = [f"{path}sunnymusic1.mp3", f"{path}sunnymusic2.mp3",f"{path}sunnymusic3.mp3"]
+        self.BG_rain_music = [f"{path}rainmusic1.mp3", f"{path}rainmusic2.mp3", f"{path}rainmusic3.mp3"]
+        self.rain_sound = pygame.mixer.Sound(f"{path}rain.mp3")
+        self.day_sound()
 
     def setup(self):
         tmx_data = load_pygame('../data/map.tmx')
@@ -104,7 +110,7 @@ class Level:
                     tree_sprites=self.tree_sprites,
                     interaction = self.interaction_sprites,
                     soil_layer = self.soil_layer,
-                    toggle_UI = self.toggle_UI
+                    toggle_UI = self.toggle_UI,
                  )
             if obj.name == 'Bed':
                 Interaction(
@@ -121,6 +127,13 @@ class Level:
                     groups=self.interaction_sprites,
                     name=obj.name
                 )
+            if obj.name == 'Guide':
+                Interaction(
+                    pos=(obj.x, obj.y),
+                    size=(obj.width, obj.height),
+                    groups=self.interaction_sprites,
+                    name=obj.name
+                )
 
 
         #background loading
@@ -131,8 +144,8 @@ class Level:
             z = LAYERS["ground"])
 
     def player_add_item (self, item):
+        self.collect_sound.play()
         self.player.item_inventory[item] += 1
-        self.success.play()
         item_image = pygame.image.load(f'../graphics/items/{item}.png').convert_alpha()
         self.ui.add_item_display(item_image)  # Thêm item vào danh sách hiển thị
 
@@ -144,10 +157,11 @@ class Level:
         self.soil_layer.update_plants()
         # soil
         self.soil_layer.remove_water()
-        self.raining = randint(0, 10) > 3
+        self.raining = randint(0, 10) > 7
         self.soil_layer.raining = self.raining
         if self.raining:
-            self.soil_layer.water_all() 
+            self.soil_layer.water_all()
+
 
         # apple on the tree
         for tree in self.tree_sprites.sprites():
@@ -158,6 +172,25 @@ class Level:
 
         # hien
         self.sky.start_color = [255, 255, 255]
+
+        #sound
+        self.day_sound()
+
+    def day_sound(self):
+        # sound
+        pygame.mixer.stop()
+
+        index = randint(0, 2)
+
+        if self.raining:
+            BG_music = pygame.mixer.Sound(self.BG_rain_music[index])
+            self.rain_sound.play(loops=-1)
+            BG_music.set_volume(0.5)
+            BG_music.play()
+        else:
+            BG_music = pygame.mixer.Sound(self.BG_sunny_music[index])
+            BG_music.set_volume(0.5)
+            BG_music.play()
 
     def plant_collision(self):
         if self.soil_layer.plant_sprites:
@@ -179,7 +212,7 @@ class Level:
 
         if self.raining:
             self.rain_overlay.display()
-            if not self.UI_menu_active and not self.ui.ui_opened:
+            if not self.UI_menu_active and not self.ui.ui_opened and not self.ui.dialogue_manager.in_dialogue:
                 self.rain.update()
 
         # updates
@@ -189,26 +222,34 @@ class Level:
             self.Menu.update()
         elif self.ui.ui_opened:
             self.sky.display(dt, True)
+        elif self.ui.dialogue_manager.in_dialogue:
+            self.sky.display(dt, True)
         else:
             # daytime
             self.sky.display(dt, False)
             # neu khong hien UI thi sprites mới được update
             self.all_sprites.update(dt)
             self.plant_collision()
+            # neu khong hien UI moi duoc update time
+            self.ui.time_on()
 
 
-        if not self.ui.ui_opened:
+        if not self.ui.ui_opened and not self.ui.dialogue_manager.in_dialogue:
             self.overlay.display()
         self.ui.run()
-
-
-
 
         #show inventory log
         #print(self.player.item_inventory)
 
+        if self.transition.color <= 0:
+            self.time_changeable = True;
+
         if self.player.sleep:
             self.transition.play()
+        else:
+            self.time_changeable = False
+
+
 
 class CameraGroup(pygame.sprite.Group):
     def __init__(self):

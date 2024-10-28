@@ -1,4 +1,6 @@
 import pygame
+
+from Code import sound
 from settings import *
 from random import randint, choice
 from timer import Timer
@@ -10,6 +12,7 @@ class Generic(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos)
         self.z = z
         self.hitbox = self.rect.copy().inflate(-self.rect.width * 0.2, -self.rect.height * 0.75)
+
 
 class Interaction(Generic):
     def __init__(self, pos, size, groups, name):
@@ -62,23 +65,16 @@ class WildFlower (Generic):
 class Tree(Generic):
     def __init__(self, pos, surf, groups, name, player_add_item):
         super().__init__(pos, surf, groups)
-
-        # tree attributes
+        self.axe_sound = pygame.mixer.Sound("../audio/axe.wav")
         self.health = 5
         self.alive = True
-        self.original_pos = pos  # Lưu vị trí ban đầu của cây
-        self.shake_offset = 0  # Biến lưu trạng thái "rung"
-        self.shake_direction = 1  # Hướng rung
-        self.shake_amplitude = 5  # Độ rung (pixel)
-        self.axe_sound = pygame.mixer.Sound("../audio/axe.mp3")
-        # Timer for shaking
-        self.shake_timer = Timer(50)  # Rung trong 50ms
-
-        stump_path = f'../graphics/stumps/{"small" if name == "Small" else "large"}.png'
-        self.stump_surf = pygame.image.load(stump_path).convert_alpha()
+        self.original_pos = pos
+        self.shake_offset = 0
+        self.shake_direction = 1
+        self.shake_amplitude = 5
+        self.shake_timer = Timer(50)
+        self.stump_surf = pygame.image.load(f'../graphics/stumps/{"small" if name == "Small" else "large"}.png').convert_alpha()
         self.invul_timer = Timer(200)
-
-        # apples
         self.apple_surf = pygame.image.load('../graphics/fruit/apple.png')
         self.apple_pos = APPLE_POS[name]
         self.apple_sprites = pygame.sprite.Group()
@@ -86,17 +82,11 @@ class Tree(Generic):
         self.player_add_item = player_add_item
 
     def damage(self):
-
-        # damaging the tree
         self.health -= 1
         if not self.shake_timer.active:
             self.shake_timer.activate()
-
-        # sound
         self.axe_sound.play()
-
-        # remove an apple
-        if len(self.apple_sprites.sprites()) > 0:
+        if self.apple_sprites:
             random_apple = choice(self.apple_sprites.sprites())
             Particle(pos=random_apple.rect.topleft,
                      surf=random_apple.image,
@@ -105,21 +95,15 @@ class Tree(Generic):
             self.player_add_item('apple')
             random_apple.kill()
 
-
-
     def shake(self):
         if self.shake_timer.active:
-            # Thay đổi vị trí cây mỗi khi rung
             self.shake_offset += self.shake_direction * self.shake_amplitude
-            self.shake_direction *= -1  # Đổi hướng rung
-            self.rect.x = self.original_pos[0] + self.shake_offset  # Cập nhật vị trí rung
+            self.shake_direction *= -1
+            self.rect.x = self.original_pos[0] + self.shake_offset
+            self.shake_timer.update()  # Kiểm tra nếu `update()` cần `dt`, dùng `self.shake_timer.update(dt)`
 
-            # Kiểm tra xem timer có hết thời gian chưa
-            self.shake_timer.update()
-
-            # Nếu timer đã hết, dừng rung và trả về vị trí gốc
             if not self.shake_timer.active:
-                self.rect.x = self.original_pos[0]  # Đảm bảo vị trí đúng
+                self.rect.x = self.original_pos[0]
                 self.shake_offset = 0
 
     def check_death(self):
@@ -143,10 +127,10 @@ class Tree(Generic):
                 x = pos[0] + self.rect.left
                 y = pos[1] + self.rect.top
                 print(f"Creating apple at ({x}, {y})")
-                # Use the Tree instance's apple_sprites group
                 Generic(
                     pos=(x, y),
                     surf=self.apple_surf,
                     groups=[self.apple_sprites, self.groups()[0]],
                     z=LAYERS['fruit'])
+
 
