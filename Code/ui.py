@@ -31,6 +31,8 @@ class ui:
         self.dialogue_frame = pygame.image.load('../graphics/ui/dialogue_frame.png').convert_alpha()
         self.trader_avt = pygame.image.load('../graphics/ui/trader_avt.png').convert_alpha()
         self.guide_avt = pygame.image.load('../graphics/ui/guide_avt.png').convert_alpha()
+        self.player_avt = pygame.image.load('../graphics/ui/player_avt.png').convert_alpha()
+
 
         # Thêm thuộc tính cho ngày
         self.current_day = 1  # Ngày bắt đầu
@@ -129,6 +131,9 @@ class ui:
         self.button1_sound = pygame.mixer.Sound('../audio/button1.wav')
         self.cricket_sound = pygame.mixer.Sound('../audio/cricket.mp3')
         self.cricket_sound.set_volume(0.3)
+
+        #first dialogue
+        self.first_dialogue()
 
     # Hàm để vẽ UI lên màn hình
     def draw_UI(self):
@@ -266,6 +271,18 @@ class ui:
             self.active_ui_rects.append(self.ui_quest_bg_rect)
         self.draw_exit_button()
 
+        # Vị trí hiển thị của các text
+        apple_pos = (self.ui_quest_bg_rect.x + 175, self.ui_quest_bg_rect.y + 158)
+        wheat_pos = (self.ui_quest_bg_rect.x + 175, self.ui_quest_bg_rect.y + 245)
+        coin_pos = (self.ui_quest_bg_rect.x + 145, self.ui_quest_bg_rect.y + 332)
+
+        # Sử dụng hàm draw_text_with_outline để vẽ các text
+        self.draw_text_with_outline(f"{self.player.item_inventory['tomato']}", apple_pos[0], apple_pos[1], WHITE,
+                                    COLOR_MAIN, 2)
+        self.draw_text_with_outline(f"{self.player.item_inventory['wheat']}", wheat_pos[0], wheat_pos[1], WHITE,
+                                    COLOR_MAIN, 2)
+        self.draw_text_with_outline(f"{self.player.money}", coin_pos[0], coin_pos[1], WHITE, COLOR_MAIN, 2)
+
     def draw_ui_backpack(self):
         #vẽ background backpack
         self.display_surface.blit(self.ui_backpack_surf, self.ui_backpack_rect)
@@ -359,6 +376,14 @@ class ui:
                     # Vẽ tên Guide dưới hình đại diện
                     self.draw_text_with_outline("Guide", frame_rect.centerx,
                                                 avt_rect.bottom + 20, COLOR_MAIN, COLOR_BASE_1_LIGHT, 3)  # Điều chỉnh vị trí nếu cần
+            else:
+                    player_avt_rect = self.player_avt.get_rect(
+                        center=frame_rect.center)  # Đảm bảo vị trí tương tự như trước
+                    self.display_surface.blit(self.player_avt, player_avt_rect)  # Vẽ hình ảnh mới lên màn hình
+
+                    # Vẽ tên Guide dưới hình đại diện
+                    self.draw_text_with_outline("You", frame_rect.centerx,
+                                                player_avt_rect.bottom + 20, COLOR_MAIN, COLOR_BASE_1_LIGHT, 3)
 
         self.dialogue_manager.draw()  # Vẽ hội thoại
 
@@ -459,10 +484,24 @@ class ui:
             collied_interaction_sprite = pygame.sprite.spritecollide(self.player, self.player.interaction, False)
             if collied_interaction_sprite:
                 if collied_interaction_sprite[0].name == 'Trader':
-                    dialogues = ["Chao ban!", "Ban khoe chu!", "Toi co mot vai mon hang can trao doi day." , "Xem di nhe!"]
+                    dialogues = [
+                        "Hello! Need something to buy or sell?",
+                        "I have the best seeds in town. Choose what you like!",
+                        "And want to sell your crops? I’ll give you a fair price."
+                    ]
+
                     self.start_dialogue(dialogues, self.player.open_trader)  # Bắt đầu hội thoại mới
                 elif collied_interaction_sprite[0].name == 'Guide':
-                    dialogues = ["Chao ban!", "Cong viec hom nay the nao roi", "Ban hay trong va thu hoach 5 lua mi va 5 ca chua truoc nhe" , "Toi se doi!"]
+                    dialogues = [
+                        "Welcome to Sprout Land! I'm here to guide you through your farm.",
+                        "To start, grab your hoe and begin tilling the soil.",
+                        "Once the soil is ready, it's time to plant your seeds.",
+                        "Water your plants every day. They need it to grow.",
+                        "Each plant grows at its own pace, so be patient!",
+                        "If you need to trade, head up to the mountain to find the trader.",
+                        "Keep up the good work, and let me know if you need more help!"
+                    ]
+
                     self.start_dialogue(dialogues, self.player.end_conservation)  # Bắt đầu hội thoại mới
         if keys[pygame.K_RETURN] and self.dialogue_manager.in_dialogue:
             self.dialogue_manager.advance_sentence()  # Chuyển câu thoại
@@ -476,6 +515,21 @@ class ui:
             self.active_ui_rects.remove(self.ui_quest_bg_rect)
         if self.setting_bg_rect in self.active_ui_rects:
             self.active_ui_rects.remove(self.setting_bg_rect)
+
+    def first_dialogue(self):
+
+        dialogues = [
+            "It has been so long since I left this place...",
+            "The farm looks... different. Much has changed.",
+            "But this is where it all begins. I need to restore it.",
+            "First, I should clear the land and start planting.",
+            "This won’t be easy, but I’m ready for the challenge.",
+            "I will reconnect with the land... and with the people here.",
+            "Let’s get started. Maybe i should ask nearby guy how to plant."
+        ]
+
+        self.start_dialogue(dialogues, self.player.end_conservation)  # Bắt đầu hội thoại mới
+
 
 
     def run(self):
