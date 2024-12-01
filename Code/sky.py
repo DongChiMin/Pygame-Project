@@ -45,7 +45,7 @@ class Sky:
                 if self.start_color[index] > value:
                     #sau 165 deltaTime thi troi bat dau toi
                     if self.time >= 165:
-                        self.start_color[index] -= 3 * dt
+                        self.start_color[index] -= 30 * dt
 
         self.full_surf.fill(self.start_color)
         self.display_surface.blit(self.full_surf, (0, 0), special_flags = pygame.BLEND_RGBA_MULT)

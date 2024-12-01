@@ -21,7 +21,8 @@ class Menu:
         self.padding = 8
 
         #entries
-        self.options = list(self.player.item_inventory.keys()) + list(self.player.seed_inventory.keys())
+        self.options = (list(self.player.item_inventory.keys())
+                        + list(self.player.seed_inventory.keys()))
         self.sell_border = len(self.player.item_inventory) - 1
             #sell border: kiem tra index neu < sell thi la vat pham sell duoc,
         self.setup()

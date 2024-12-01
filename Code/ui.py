@@ -135,7 +135,7 @@ class ui:
         #first dialogue
         self.first_dialogue()
 
-    # Hàm để vẽ UI lên màn hình
+    #NHÓM PHƯƠNG THỨC QUẢN LÝ HIỂN THỊ UI
     def draw_UI(self):
         # Vẽ nút backpack
         if self.check_hover(self.backpack_button_rect):
@@ -179,43 +179,6 @@ class ui:
         coin_text_surf = self.font.render(f"{self.player.money}", False, (170, 121, 89))
         coin_text_rect = coin_text_surf.get_rect(midright =(SCREEN_WIDTH -33, 223))
         self.display_surface.blit(coin_text_surf, coin_text_rect)
-
-    def time_on(self):
-        # Cập nhật phút nếu thời gian đang chạy
-        if self.time_running and not self.ui_opened:
-            current_time = pygame.time.get_ticks()  # Lấy thời gian hiện tại
-
-            if current_time - self.last_time_update >= self.time_speed:  # Kiểm tra nếu đủ thời gian để cập nhật
-                self.last_time_update = current_time  # Cập nhật thời gian lần cập nhật cuối
-
-                self.current_minute += 30  # Tăng phút
-                if self.current_minute >= 60:  # Nếu phút đạt 60
-                    self.current_minute = 0  # Reset phút
-                    self.current_hour += 1  # Tăng giờ
-
-                    # Reset giờ nếu đạt 24
-                    if self.current_hour >= 24:  # Quay về 0:00
-                        self.current_hour = 0
-
-                    # Dừng khi đạt 4:00
-                    if self.current_hour == 4:
-                        self.time_running = False  # Dừng chạy thời gian
-
-    def set_sleep_time(self):
-        # Thiết lập giờ và phút sau khi người chơi ngủ
-        self.current_hour = 6  # Đặt lại giờ về 6:00 sáng
-        self.current_minute = 0  # Đặt lại phút về 0
-        self.time_running = True  # Bắt đầu lại thời gian chạy
-
-    def change_day(self):
-        if self.player.sleep:
-            self.day_changing = True
-        if self.day_changing and self.level.time_changeable:
-            self.day_changing = False
-            self.level.time_changeable = False
-            self.current_day +=1
-            self.set_sleep_time()
-
     def draw_time(self):
             #nếu là 7 giờ tối: âm thanh dế
             if self.current_hour == 19:
@@ -229,27 +192,6 @@ class ui:
             # Vẽ ngày
             day_text = f"Day {self.current_day}"  # Định dạng chuỗi ngày
             self.draw_text_with_outline(day_text,  SCREEN_WIDTH // 2, 60, COLOR_MAIN, COLOR_BASE_1_LIGHT, 3)  # Vẽ ngày ở vị trí (100, 80)
-
-    def add_item_display(self, item_image):
-        # Mỗi item là một dictionary chứa thông tin về hình ảnh, alpha, và thời gian
-        item_info = {
-            'image': item_image,  # Thay 'image' thành 'item_image' cho đúng với tham số
-            'alpha': 255,  # Độ mờ bắt đầu từ 255 (hoàn toàn hiển thị)
-            'timer': Timer(2000),  # Thời gian hiển thị là 2 giây
-            'position': (50, SCREEN_HEIGHT - 100 - len(self.item_display) * 70),  # Tính vị trí để không chồng lên
-        }
-        self.item_display.append(item_info)
-        item_info['timer'].activate()  # Kích hoạt timer
-
-    def update_item_display(self):
-        for item in self.item_display[:]:  # Duyệt qua từng item trong danh sách
-            if item['timer'].active:
-                item['timer'].update()  # Cập nhật thời gian
-            else:
-                item['alpha'] -= 5  # Giảm alpha dần sau khi hết thời gian hiển thị
-                if item['alpha'] <= 0:  # Nếu alpha <= 0 thì loại bỏ item
-                    self.item_display.remove(item)
-
     def draw_item_display(self):
         for item in self.item_display:
             # Tạo bản sao của hình ảnh để chỉnh alpha
@@ -258,97 +200,6 @@ class ui:
 
             # Vẽ hình ảnh tại vị trí cụ thể
             self.display_surface.blit(item_image, item['position'])
-
-    def draw_ui_setting(self):
-        self.display_surface.blit(self.setting_bg, self.setting_bg_rect)
-        if self.setting_bg_rect not in self.active_ui_rects:
-            self.active_ui_rects.append(self.setting_bg_rect)
-        self.draw_exit_button()
-
-    def draw_ui_quest(self):
-        self.display_surface.blit(self.ui_quest_bg, self.ui_quest_bg_rect)
-        if self.ui_quest_bg_rect not in self.active_ui_rects:
-            self.active_ui_rects.append(self.ui_quest_bg_rect)
-        self.draw_exit_button()
-
-        # Vị trí hiển thị của các text
-        apple_pos = (self.ui_quest_bg_rect.x + 175, self.ui_quest_bg_rect.y + 158)
-        wheat_pos = (self.ui_quest_bg_rect.x + 175, self.ui_quest_bg_rect.y + 245)
-        coin_pos = (self.ui_quest_bg_rect.x + 145, self.ui_quest_bg_rect.y + 332)
-
-        # Sử dụng hàm draw_text_with_outline để vẽ các text
-        self.draw_text_with_outline(f"{self.player.item_inventory['tomato']}", apple_pos[0], apple_pos[1], WHITE,
-                                    COLOR_MAIN, 2)
-        self.draw_text_with_outline(f"{self.player.item_inventory['wheat']}", wheat_pos[0], wheat_pos[1], WHITE,
-                                    COLOR_MAIN, 2)
-        self.draw_text_with_outline(f"{self.player.money}", coin_pos[0], coin_pos[1], WHITE, COLOR_MAIN, 2)
-
-    def draw_ui_backpack(self):
-        #vẽ background backpack
-        self.display_surface.blit(self.ui_backpack_surf, self.ui_backpack_rect)
-        if self.ui_backpack_rect not in self.active_ui_rects:
-            self.active_ui_rects.append(self.ui_backpack_rect)
-        self.draw_exit_button()
-
-        self.draw_inventory_items()
-
-    def draw_inventory_items(self):
-        # Tọa độ bắt đầu để vẽ item
-        start_x = self.ui_backpack_rect.left + 100  # Bỏ qua một chút từ bên trái
-        start_y = self.ui_backpack_rect.top + 230  # Bỏ qua một chút từ trên xuống
-
-        # Khoảng cách giữa các mục
-        item_spacing = 96  # Điều chỉnh khoảng cách giữa các mục theo chiều ngang
-
-        # Tạo danh sách chứa các item và seed cần hiển thị
-        items_and_seeds = []
-
-        # Lấy các item từ inventory
-        for item_name, amount in self.player.item_inventory.items():
-            items_and_seeds.append(f"{amount}")
-
-        # Lấy các seed từ seed_inventory
-        for seed_name, amount in self.player.seed_inventory.items():
-            items_and_seeds.append(f"{amount}")
-
-        # Vẽ các items trong inventory
-        for index, item in enumerate(items_and_seeds):
-            # Vẽ chữ có viền
-            self.draw_text_with_outline(item, start_x + index * item_spacing, start_y, WHITE, COLOR_MAIN, 3)
-
-    def draw_text_with_outline(self, text, x, y, stroke, color, stroke_size):
-        # Vẽ viền
-        outline_text_surf = self.font.render(text, False, stroke)  # Màu viền (color)
-        outline_rect = outline_text_surf.get_rect(center=(x, y))
-
-        # Vẽ viền xung quanh bằng cách dịch chuyển
-        self.display_surface.blit(outline_text_surf, outline_rect.move(-stroke_size, 0))
-        self.display_surface.blit(outline_text_surf, outline_rect.move(stroke_size, 0))
-        self.display_surface.blit(outline_text_surf, outline_rect.move(0, -stroke_size))
-        self.display_surface.blit(outline_text_surf, outline_rect.move(0, stroke_size))
-
-        # Vẽ chữ chính
-        text_surf = self.font.render(text, False, color)  # Màu chữ chính
-        self.display_surface.blit(text_surf, outline_rect)
-
-    def draw_exit_button(self):
-        # vẽ nút exit
-        if self.check_hover(self.exit_button_rect):
-            self.display_surface.blit(self.exit_button_hover_surf, self.exit_button_rect)
-        else:
-            self.display_surface.blit(self.exit_button_surf, self.exit_button_rect)
-        if self.exit_button_rect not in self.active_ui_rects:
-            self.active_ui_rects.append(self.exit_button_rect)
-
-    #HỘI THOẠI
-    def start_dialogue(self, dialogues, action):
-        """Gọi hội thoại từ lớp DialogueManager"""
-        self.dialogue_manager.start_dialogue(dialogues, action)
-
-    def update_dialogue(self, dt):
-        """Cập nhật hội thoại"""
-        self.dialogue_manager.update(dt)
-
     def draw_dialogue(self):
         """Hiển thị UI"""
         if self.dialogue_manager.in_dialogue:
@@ -386,15 +237,70 @@ class ui:
                                                 player_avt_rect.bottom + 20, COLOR_MAIN, COLOR_BASE_1_LIGHT, 3)
 
         self.dialogue_manager.draw()  # Vẽ hội thoại
+    def draw_ui_setting(self):
+        self.display_surface.blit(self.setting_bg, self.setting_bg_rect)
+        if self.setting_bg_rect not in self.active_ui_rects:
+            self.active_ui_rects.append(self.setting_bg_rect)
+        self.draw_exit_button()
+    def draw_ui_quest(self):
+        self.display_surface.blit(self.ui_quest_bg, self.ui_quest_bg_rect)
+        if self.ui_quest_bg_rect not in self.active_ui_rects:
+            self.active_ui_rects.append(self.ui_quest_bg_rect)
+        self.draw_exit_button()
 
-    # Kiểm tra nếu con trỏ chuột đang hover lên một phần tử UI
-    def check_hover(self, rect):
-        mouse_pos = pygame.mouse.get_pos()  # Lấy vị trí chuột
-        if rect.collidepoint(mouse_pos):
+        # Vị trí hiển thị của các text
+        apple_pos = (self.ui_quest_bg_rect.x + 175, self.ui_quest_bg_rect.y + 158)
+        wheat_pos = (self.ui_quest_bg_rect.x + 175, self.ui_quest_bg_rect.y + 245)
+        coin_pos = (self.ui_quest_bg_rect.x + 145, self.ui_quest_bg_rect.y + 332)
 
-            return True  # Trả về true nếu con trỏ đang hover lên nút này
-        return False
+        # Sử dụng hàm draw_text_with_outline để vẽ các text
+        self.draw_text_with_outline(f"{self.player.item_inventory['tomato']}", apple_pos[0], apple_pos[1], WHITE,
+                                    COLOR_MAIN, 2)
+        self.draw_text_with_outline(f"{self.player.item_inventory['wheat']}", wheat_pos[0], wheat_pos[1], WHITE,
+                                    COLOR_MAIN, 2)
+        self.draw_text_with_outline(f"{self.player.money}", coin_pos[0], coin_pos[1], WHITE, COLOR_MAIN, 2)
+    def draw_ui_backpack(self):
+        #vẽ background backpack
+        self.display_surface.blit(self.ui_backpack_surf, self.ui_backpack_rect)
+        if self.ui_backpack_rect not in self.active_ui_rects:
+            self.active_ui_rects.append(self.ui_backpack_rect)
+        self.draw_exit_button()
 
+        self.draw_inventory_items()
+    def draw_inventory_items(self):
+        # Tọa độ bắt đầu để vẽ item
+        start_x = self.ui_backpack_rect.left + 100  # Bỏ qua một chút từ bên trái
+        start_y = self.ui_backpack_rect.top + 230  # Bỏ qua một chút từ trên xuống
+
+        # Khoảng cách giữa các mục
+        item_spacing = 96  # Điều chỉnh khoảng cách giữa các mục theo chiều ngang
+
+        # Tạo danh sách chứa các item và seed cần hiển thị
+        items_and_seeds = []
+
+        # Lấy các item từ inventory
+        for item_name, amount in self.player.item_inventory.items():
+            items_and_seeds.append(f"{amount}")
+
+        # Lấy các seed từ seed_inventory
+        for seed_name, amount in self.player.seed_inventory.items():
+            items_and_seeds.append(f"{amount}")
+
+        # Vẽ các items trong inventory
+        for index, item in enumerate(items_and_seeds):
+            # Vẽ chữ có viền
+            self.draw_text_with_outline(item, start_x + index * item_spacing, start_y, WHITE, COLOR_MAIN, 3)
+    def draw_exit_button(self):
+        # vẽ nút exit
+        if self.check_hover(self.exit_button_rect):
+            self.display_surface.blit(self.exit_button_hover_surf, self.exit_button_rect)
+        else:
+            self.display_surface.blit(self.exit_button_surf, self.exit_button_rect)
+        if self.exit_button_rect not in self.active_ui_rects:
+            self.active_ui_rects.append(self.exit_button_rect)
+
+
+    #NHÓM PHƯƠNG THỨC QUẢN LÝ INPUT
     # Hàm kiểm tra va chạm với mọi UI đang mở
     def check_mouse_collision(self):
         self.is_mouse_on_UI = False
@@ -402,8 +308,14 @@ class ui:
             if self.check_hover(rect):
                 self.is_mouse_on_UI = True
                 break
+    # Kiểm tra nếu con trỏ chuột đang hover lên một phần tử UI
+    def check_hover(self, rect):
+        mouse_pos = pygame.mouse.get_pos()  # Lấy vị trí chuột
+        if rect.collidepoint(mouse_pos):
 
-    # Xử lý các sự kiện chuột
+            return True  # Trả về true nếu con trỏ đang hover lên nút này
+        return False
+    # Xử lý các sự kiện
     def handle_event(self):
         mouses = pygame.mouse.get_pressed()
         keys = pygame.key.get_pressed()
@@ -465,7 +377,6 @@ class ui:
                 self.remove_quest_ui.activate()
                 self.button1_sound.play()
             self.ui_opened = False
-
     def player_click(self):
         # Kiểm tra nếu chuột trái được bấm khi không hover
         if pygame.mouse.get_pressed()[0] == 1 and not self.is_mouse_on_UI:
@@ -477,7 +388,6 @@ class ui:
         if pygame.mouse.get_pressed()[2] == 1 and not self.is_mouse_on_UI:
             self.player.timers['seed use'].activate()
             self.player.input_seed_use()
-
     def player_keyboard(self):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_f]:
@@ -503,17 +413,56 @@ class ui:
                     self.start_dialogue(dialogues, self.player.end_conservation)  # Bắt đầu hội thoại mới
         if keys[pygame.K_RETURN] and self.dialogue_manager.in_dialogue:
             self.dialogue_manager.advance_sentence()  # Chuyển câu thoại
+    def draw_mouse_cursor(self):
+        # Draw mouse cursor
+        mouse_x, mouse_y = pygame.mouse.get_pos()  # Get mouse position
+        self.cursor_rect.topleft = (mouse_x, mouse_y)  # Update position
+        self.display_surface.blit(self.cursor_surf, self.cursor_rect)
 
-    def remove_ui_elements(self):
-        if self.exit_button_rect in self.active_ui_rects:
-            self.active_ui_rects.remove(self.exit_button_rect)
-        if self.ui_backpack_rect in self.active_ui_rects:
-            self.active_ui_rects.remove(self.ui_backpack_rect)
-        if self.ui_quest_bg_rect in self.active_ui_rects:
-            self.active_ui_rects.remove(self.ui_quest_bg_rect)
-        if self.setting_bg_rect in self.active_ui_rects:
-            self.active_ui_rects.remove(self.setting_bg_rect)
 
+    #NHÓM PHƯƠNG THỨC QUẢN LÝ THỜI GIAN
+    def time_on(self):
+        # Cập nhật phút nếu thời gian đang chạy
+        if self.time_running and not self.ui_opened:
+            current_time = pygame.time.get_ticks()  # Lấy thời gian hiện tại
+
+            if current_time - self.last_time_update >= self.time_speed:  # Kiểm tra nếu đủ thời gian để cập nhật
+                self.last_time_update = current_time  # Cập nhật thời gian lần cập nhật cuối
+
+                self.current_minute += 30  # Tăng phút
+                if self.current_minute >= 60:  # Nếu phút đạt 60
+                    self.current_minute = 0  # Reset phút
+                    self.current_hour += 1  # Tăng giờ
+
+                    # Reset giờ nếu đạt 24
+                    if self.current_hour >= 24:  # Quay về 0:00
+                        self.current_hour = 0
+
+                    # Dừng khi đạt 4:00
+                    if self.current_hour == 4:
+                        self.time_running = False  # Dừng chạy thời gian
+    def set_sleep_time(self):
+        # Thiết lập giờ và phút sau khi người chơi ngủ
+        self.current_hour = 6  # Đặt lại giờ về 6:00 sáng
+        self.current_minute = 0  # Đặt lại phút về 0
+        self.time_running = True  # Bắt đầu lại thời gian chạy
+    def change_day(self):
+        if self.player.sleep:
+            self.day_changing = True
+        if self.day_changing and self.level.time_changeable:
+            self.day_changing = False
+            self.level.time_changeable = False
+            self.current_day +=1
+            self.set_sleep_time()
+
+    #NHÓM PHƯƠNG THỨC QUẢN LÝ HỘI THOẠI
+    def start_dialogue(self, dialogues, action):
+        """Gọi hội thoại từ lớp DialogueManager"""
+        self.dialogue_manager.start_dialogue(dialogues, action)
+    def update_dialogue(self, dt):
+        """Cập nhật hội thoại"""
+        self.dialogue_manager.update(dt)
+    #hội thoại đầu game
     def first_dialogue(self):
 
         dialogues = [
@@ -529,7 +478,52 @@ class ui:
         self.start_dialogue(dialogues, self.player.end_conservation)  # Bắt đầu hội thoại mới
 
 
+    #HIỆU ỨNG HIỂN THỊ HÌNH ẢNH KHI NHẬN ITEM
+    def add_item_display(self, item_image):
+        # Mỗi item là một dictionary chứa thông tin về hình ảnh, alpha, và thời gian
+        item_info = {
+            'image': item_image,  # Thay 'image' thành 'item_image' cho đúng với tham số
+            'alpha': 255,  # Độ mờ bắt đầu từ 255 (hoàn toàn hiển thị)
+            'timer': Timer(2000),  # Thời gian hiển thị là 2 giây
+            'position': (50, SCREEN_HEIGHT - 100 - len(self.item_display) * 70),  # Tính vị trí để không chồng lên
+        }
+        self.item_display.append(item_info)
+        item_info['timer'].activate()  # Kích hoạt timer
+    def update_item_display(self):
+        for item in self.item_display[:]:  # Duyệt qua từng item trong danh sách
+            if item['timer'].active:
+                item['timer'].update()  # Cập nhật thời gian
+            else:
+                item['alpha'] -= 5  # Giảm alpha dần sau khi hết thời gian hiển thị
+                if item['alpha'] <= 0:  # Nếu alpha <= 0 thì loại bỏ item
+                    self.item_display.remove(item)
+    #HIỆU ỨNG STROKE: MÀU VIỀN QUANH CHỮ
+    def draw_text_with_outline(self, text, x, y, stroke, color, stroke_size):
+        # Vẽ viền
+        outline_text_surf = self.font.render(text, False, stroke)  # Màu viền (color)
+        outline_rect = outline_text_surf.get_rect(center=(x, y))
 
+        # Vẽ viền xung quanh bằng cách dịch chuyển
+        self.display_surface.blit(outline_text_surf, outline_rect.move(-stroke_size, 0))
+        self.display_surface.blit(outline_text_surf, outline_rect.move(stroke_size, 0))
+        self.display_surface.blit(outline_text_surf, outline_rect.move(0, -stroke_size))
+        self.display_surface.blit(outline_text_surf, outline_rect.move(0, stroke_size))
+
+        # Vẽ chữ chính
+        text_surf = self.font.render(text, False, color)  # Màu chữ chính
+        self.display_surface.blit(text_surf, outline_rect)
+    #QUẢN LÝ ĐÓNG UI QUA CÁC CỜ
+    def remove_ui_elements(self):
+        if self.exit_button_rect in self.active_ui_rects:
+            self.active_ui_rects.remove(self.exit_button_rect)
+        if self.ui_backpack_rect in self.active_ui_rects:
+            self.active_ui_rects.remove(self.ui_backpack_rect)
+        if self.ui_quest_bg_rect in self.active_ui_rects:
+            self.active_ui_rects.remove(self.ui_quest_bg_rect)
+        if self.setting_bg_rect in self.active_ui_rects:
+            self.active_ui_rects.remove(self.setting_bg_rect)
+
+    #UPDATE vòng lặp
     def run(self):
 
         self.draw_UI()
@@ -571,9 +565,7 @@ class ui:
         self.update_dialogue(dt)
         self.draw_dialogue()
 
+        #Chuột
+        self.draw_mouse_cursor()
 
 
-        # Draw mouse cursor
-        mouse_x, mouse_y = pygame.mouse.get_pos()  # Get mouse position
-        self.cursor_rect.topleft = (mouse_x, mouse_y)  # Update position
-        self.display_surface.blit(self.cursor_surf, self.cursor_rect)
