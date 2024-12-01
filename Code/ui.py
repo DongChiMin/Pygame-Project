@@ -485,9 +485,7 @@ class ui:
             if collied_interaction_sprite:
                 if collied_interaction_sprite[0].name == 'Trader':
                     dialogues = [
-                        "Hello! Need something to buy or sell?",
-                        "I have the best seeds in town. Choose what you like!",
-                        "And want to sell your crops? I’ll give you a fair price."
+                        "Hello! Need something to buy or sell?"
                     ]
 
                     self.start_dialogue(dialogues, self.player.open_trader)  # Bắt đầu hội thoại mới
