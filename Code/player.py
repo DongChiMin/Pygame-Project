@@ -56,7 +56,7 @@ class Player(pygame.sprite.Sprite):
             'wheat' : 5,
             'tomato': 5
         }
-        self.money = 200
+        self.money = 0
 
         # interaction
         self.tree_sprites = tree_sprites
