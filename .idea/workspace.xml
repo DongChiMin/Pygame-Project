@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c0bb761f-e872-4f27-a883-78be55584c6a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/player.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/sky.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/sky.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,18 +31,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.level.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.overlay.executor&quot;: &quot;Run&quot;,
-    &quot;Python.player.executor&quot;: &quot;Run&quot;,
-    &quot;Python.pytmx.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;hieu&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/CODE/Python/Test&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.level.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.overlay.executor": "Run",
+    "Python.player.executor": "Run",
+    "Python.pytmx.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "hieu",
+    "last_opened_file_path": "C:/Users/namv2/Downloads/Main Folder/Pygame-Project/Pygame-Project"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Pygame-Project" />
