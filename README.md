@@ -7,19 +7,15 @@ Sprout Land is a charming farm simulation game that takes players on a journey t
 
 ## ✨ Features  
 - 🌾 **Plant, Harvest, and Trade:** Manage your farm and trade with local traders.  
-- 🌦 **Dynamic Weather & Day-Night Cycle:** Experience the seasons and time progression in real-time.  
+- 🌦 **Dynamic Weather & Day-Night Cycle:** Experience the time progression in real-time.  
 - 🤝 **NPC Interactions:** Build relationships with neighbors and get help along the way.  
-- 🛠 **Farm Management:** Chop wood, repair structures, and expand your farm.  
-- 🎭 **Engaging Events:** Discover festivals, quests, and surprises in the lively town.  
 
 ## 👥 Team Contributions  
 - 🎨 **UI Handling & Design:** Creating intuitive and appealing user interfaces for smooth gameplay.  
-- 🎵 **Sound & Game Logic Implementation:** Ensuring immersive soundscapes and core gameplay mechanics.  
+- 🎵 **Sound & Game Logic Implementation:** Ensuring immersive soundscapes and core gameplay mechanics. (Sounds in Stardew Valley by Concerned Ape)
 - 🛒 **Shopping & Dialogue System Development:** Designing a seamless shopping experience and interactive dialogue system for engaging storytelling.  
 
 ## 📂 Repository Purpose  
-This repository serves as a central hub for storing game assets, scripts, and design files. Contributions focus on clean code, efficient resource management, and enhancing user experience.  
-
 Enjoy the journey of growth and connection in **Sprout Land**! 🌱✨  
 
 ## 📖 Screenshot demo:  
