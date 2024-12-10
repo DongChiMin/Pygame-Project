@@ -1,14 +1,28 @@
-(ASSETS: Sprout Land by Cup Nooble.)\n
-DESCRIPTION: Sprout Land is a farm simulation game where players revive an old
-farm by planting crops, chopping wood, trade seeds, interact with NPCs, and
-explore events within a dynamic weather system and day-night cycle. The game
-emphasizes reconnecting with nature and the community, offering a calm and
-relaxing experience.
-TEAM ROLE:
-• UI handling, UI Design.
-• Sound, Game Logic Implementation.
-• Shopping, Dialogue System Development.
-DEMO:
+# Sprout Land 🌱 - Farm Simulation Game  
+
+**ASSETS:** *Sprout Land by Cup Nooble*  
+
+## 📖 Description  
+Sprout Land is a charming farm simulation game that takes players on a journey to restore an abandoned farm inherited from their late grandfather. Players can grow crops, chop wood, trade seeds, interact with friendly NPCs, and experience unique events within a dynamic weather system and day-night cycle. The game provides a peaceful and relaxing atmosphere, encouraging players to reconnect with nature and their community while managing resources and rebuilding the farm.  
+
+## ✨ Features  
+- 🌾 **Plant, Harvest, and Trade:** Manage your farm and trade with local traders.  
+- 🌦 **Dynamic Weather & Day-Night Cycle:** Experience the seasons and time progression in real-time.  
+- 🤝 **NPC Interactions:** Build relationships with neighbors and get help along the way.  
+- 🛠 **Farm Management:** Chop wood, repair structures, and expand your farm.  
+- 🎭 **Engaging Events:** Discover festivals, quests, and surprises in the lively town.  
+
+## 👥 Team Contributions  
+- 🎨 **UI Handling & Design:** Creating intuitive and appealing user interfaces for smooth gameplay.  
+- 🎵 **Sound & Game Logic Implementation:** Ensuring immersive soundscapes and core gameplay mechanics.  
+- 🛒 **Shopping & Dialogue System Development:** Designing a seamless shopping experience and interactive dialogue system for engaging storytelling.  
+
+## 📂 Repository Purpose  
+This repository serves as a central hub for storing game assets, scripts, and design files. Contributions focus on clean code, efficient resource management, and enhancing user experience.  
+
+Enjoy the journey of growth and connection in **Sprout Land**! 🌱✨  
+
+## 📖 Screenshot demo:  
 ![Screenshot 2024-12-01 224003](https://github.com/user-attachments/assets/2145e7e5-1a1d-4e43-b850-022d51d136c0)
 ![Screenshot 2024-12-01 224041](https://github.com/user-attachments/assets/2db86071-b836-4e80-8aa9-1db258ffa089)
 ![Screenshot 2024-12-01 224138](https://github.com/user-attachments/assets/0186855c-d73a-4119-91ef-c08ffc2777a3)
