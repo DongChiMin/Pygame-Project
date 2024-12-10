@@ -1,4 +1,4 @@
-(ASSETS: Sprout Land by Cup Nooble.)
+(ASSETS: Sprout Land by Cup Nooble.)\n
 DESCRIPTION: Sprout Land is a farm simulation game where players revive an old
 farm by planting crops, chopping wood, trade seeds, interact with NPCs, and
 explore events within a dynamic weather system and day-night cycle. The game
