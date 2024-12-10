@@ -1,4 +1,14 @@
-day la file readme cua hieu
+(ASSETS: Sprout Land by Cup Nooble.)
+DESCRIPTION: Sprout Land is a farm simulation game where players revive an old
+farm by planting crops, chopping wood, trade seeds, interact with NPCs, and
+explore events within a dynamic weather system and day-night cycle. The game
+emphasizes reconnecting with nature and the community, offering a calm and
+relaxing experience.
+TEAM ROLE:
+• UI handling, UI Design.
+• Sound, Game Logic Implementation.
+• Shopping, Dialogue System Development.
+DEMO:
 ![Screenshot 2024-12-01 224003](https://github.com/user-attachments/assets/2145e7e5-1a1d-4e43-b850-022d51d136c0)
 ![Screenshot 2024-12-01 224041](https://github.com/user-attachments/assets/2db86071-b836-4e80-8aa9-1db258ffa089)
 ![Screenshot 2024-12-01 224138](https://github.com/user-attachments/assets/0186855c-d73a-4119-91ef-c08ffc2777a3)
