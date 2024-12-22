@@ -1,7 +1,7 @@
 # Sprout Land 🌱 - Farm Simulation Game  
 
 **ASSETS:** *Sprout Land by Cup Nooble*  
-**Sounds:** *Stardew Valley Soundtrack by Concerned Ape*
+**MUSICS:** *Stardew Valley Soundtrack by Concerned Ape*
 
 ## 📖 Description  
 Sprout Land is a charming farm simulation game that takes players on a journey to restore an abandoned farm inherited from their late grandfather. Players can grow crops, chop wood, trade seeds, interact with friendly NPCs, and experience unique events within a dynamic weather system and day-night cycle. The game provides a peaceful and relaxing atmosphere, encouraging players to reconnect with nature and their community while managing resources and rebuilding the farm.  
