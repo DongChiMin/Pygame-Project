@@ -1,7 +1,8 @@
 # Sprout Land 🌱 - Farm Simulation Game  
 
 **ASSETS:** *Sprout Land by Cup Nooble*  
-**MUSICS:** *Stardew Valley Soundtrack by Concerned Ape*
+**MUSICS:** *Stardew Valley Soundtrack by Concerned Ape*  
+**BASE TUTORIAL:** *[Stardew Valley Game Clone with Python and Pygame](https://youtu.be/R9apl6B_ZgI?si=ldlAfuNE1OivJiqS)* *by FreeCodeCamp*
 
 ## 📖 Description  
 Sprout Land is a charming farm simulation game that takes players on a journey to restore an abandoned farm inherited from their late grandfather. Players can grow crops, chop wood, trade seeds, interact with friendly NPCs, and experience unique events within a dynamic weather system and day-night cycle. The game provides a peaceful and relaxing atmosphere, encouraging players to reconnect with nature and their community while managing resources and rebuilding the farm.  
